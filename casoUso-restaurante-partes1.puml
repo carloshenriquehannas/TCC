@@ -1,0 +1,130 @@
+@startuml casoUso - restaurante - Partes 1
+title Sistema de Restaurante — Casos de Uso - Partes 1
+
+left to right direction
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+skinparam usecase {
+  BackgroundColor #FFFFFF
+  BorderColor #555555
+}
+
+'=== Atores ===
+actor "Usuário do Sistema" as Usuario
+actor "Cliente" as Cliente
+actor "Funcionário" as Funcionario <<abstract>>
+actor "Garçom" as Garcom
+actor "Chef de Cozinha" as Chef
+actor "Gerente" as Gerente
+actor "Sistema" as Sistema <<system>>
+
+'=== Heranças ===
+Cliente     -|> Usuario
+Funcionario -|> Usuario
+Garcom      -|> Funcionario
+Chef        -|> Funcionario
+Gerente     -|> Funcionario
+
+'=== Fronteira do sistema e casos de uso ===
+rectangle "Sistema de Restaurante" as SistemaRestaurante {
+
+  '--- Casos do Cliente ---
+  usecase "Realizar reserva de mesa" as UC_Reservar
+  usecase "Ver minha reserva" as UC_VerReserva
+  usecase "Cancelar minha reserva" as UC_CancelarReserva
+  usecase "Avaliar a experiência" as UC_Avaliar
+  usecase "Ver cardápio" as UC_Cardapio
+  usecase "Fazer um pedido" as UC_FazerPedido
+  usecase "Alterar meu pedido" as UC_AlterarPedido
+  usecase "Ver status do pedido" as UC_StatusPedido
+
+  '=== Obrigatoriedade (<<include>>) e Não-obrigatoriedade (<<extend>>) — Cliente ===
+  UC_FazerPedido      ..> UC_Cardapio     : <<include>>\n(ver itens antes de pedir)
+  UC_CancelarReserva  ..> UC_VerReserva   : <<include>>\n(selecionar/confirmar reserva)
+  UC_AlterarPedido    ..> UC_StatusPedido : <<include>>\n(validar se ainda é editável)
+  UC_AlterarPedido    ..> UC_FazerPedido  : <<extend>>\n[Pedido em aberto]
+  UC_Avaliar          ..> UC_StatusPedido : <<extend>>\n[Pedido entregue]
+
+  '--- Casos do Garçom ---
+  usecase "Registrar pedido de cliente" as UC_RegistrarPedido
+  usecase "Visualizar status dos pedidos" as UC_VerStatusPedidos
+  usecase "Visualizar status de reservas dos clientes" as UC_VerStatusReservas
+
+  '=== Obrigatoriedade / Reuso — Garçom ===
+  UC_RegistrarPedido     ..> UC_FazerPedido   : <<include>>\n(criar pedido no sistema)
+  UC_RegistrarPedido     ..> UC_Cardapio      : <<include>>\n(consultar itens)
+  UC_VerStatusPedidos    ..> UC_StatusPedido  : <<include>>\n(conferir andamento)
+  UC_VerStatusReservas   ..> UC_VerReserva    : <<include>>\n(consultar reserva do cliente)
+
+  '--- Casos do Gerente ---
+  usecase "Verificar disponibilidade de mesas" as UC_VerDispMesas
+  usecase "Verificar quantidade de clientes na loja" as UC_VerQtdClientes
+  usecase "Gerenciar estoque (itens do cardápio)" as UC_GerenciarEstoque
+  usecase "Verificar nível de satisfação dos clientes" as UC_VerSatisfacao
+
+  '=== Obrigatoriedade / Reuso — Gerente ===
+  UC_Reservar           ..> UC_VerDispMesas     : <<include>>\n(checar mesas livres)
+  UC_VerQtdClientes     ..> UC_VerStatusReservas: <<include>>\n(contar reservas ativas)
+  UC_VerQtdClientes     ..> UC_VerStatusPedidos : <<extend>>\n[usar pedidos ativos como proxy]
+  UC_GerenciarEstoque   ..> UC_Cardapio         : <<include>>\n(validar itens do menu)
+  UC_VerSatisfacao      ..> UC_Avaliar          : <<include>>\n(baseado nas avaliações)
+
+  '--- Casos do Chef de Cozinha ---
+  usecase "Solicitar entrega de prato pronto" as UC_SolicitarEntrega
+  usecase "Gerenciar ordens por prioridade" as UC_PriorizarOrdens
+  usecase "Solicitar novos ingredientes" as UC_SolicitarIngr
+
+  '=== Obrigatoriedade / Reuso — Chef ===
+  UC_SolicitarEntrega  ..> UC_StatusPedido     : <<include>>\n(selecionar pedido pronto)
+  UC_PriorizarOrdens   ..> UC_StatusPedido     : <<include>>\n(obter fila e tempos de espera)
+  UC_SolicitarIngr     ..> UC_GerenciarEstoque : <<extend>>\n[estoque abaixo do mínimo]
+
+  '--- Casos do Sistema (notificações e pagamento online) ---
+  usecase "Enviar alerta de alérgenos" as UC_AlertaAlergenos
+  usecase "Enviar ofertas" as UC_EnviarOfertas
+  usecase "Notificar alterações no pedido" as UC_NotificarAlteracao
+  usecase "Pagamento online" as UC_PagamentoOnline
+
+  '=== Relações (include/extend) — Sistema ===
+  UC_AlertaAlergenos   ..> UC_Cardapio        : <<extend>>\n[item contém alérgeno do cliente]
+  UC_AlertaAlergenos   ..> UC_FazerPedido     : <<extend>>\n[pedido contém alérgeno]
+  UC_EnviarOfertas     ..> UC_Cardapio        : <<extend>>\n[campanha ativa]
+  UC_NotificarAlteracao ..> UC_AlterarPedido  : <<include>>\n(após alteração)
+  UC_NotificarAlteracao ..> UC_StatusPedido   : <<extend>>\n[status atualizado]
+  UC_PagamentoOnline   ..> UC_FazerPedido     : <<extend>>\n[cliente opta por pagar online]
+}
+
+'=== Ligações do Cliente aos casos de uso ===
+Cliente --> UC_Reservar
+Cliente --> UC_VerReserva
+Cliente --> UC_CancelarReserva
+Cliente --> UC_Avaliar
+Cliente --> UC_Cardapio
+Cliente --> UC_FazerPedido
+Cliente --> UC_AlterarPedido
+Cliente --> UC_StatusPedido
+Cliente --> UC_PagamentoOnline
+
+'=== Ligações do Garçom aos casos de uso ===
+Garcom --> UC_RegistrarPedido
+Garcom --> UC_VerStatusPedidos
+Garcom --> UC_VerStatusReservas
+
+'=== Ligações do Gerente aos casos de uso ===
+Gerente --> UC_VerDispMesas
+Gerente --> UC_VerQtdClientes
+Gerente --> UC_GerenciarEstoque
+Gerente --> UC_VerSatisfacao
+
+'=== Ligações do Chef aos casos de uso ===
+Chef --> UC_SolicitarEntrega
+Chef --> UC_PriorizarOrdens
+Chef --> UC_SolicitarIngr
+
+'=== Ligações do Sistema aos casos de uso (ações automáticas) ===
+Sistema --> UC_AlertaAlergenos
+Sistema --> UC_EnviarOfertas
+Sistema --> UC_NotificarAlteracao
+Sistema --> UC_PagamentoOnline
+
+@enduml
