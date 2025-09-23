@@ -1,5 +1,5 @@
-@startuml
-title Sistema de Restaurante — Atores e Heranças (Casos de Uso)
+@startuml casoUso - restaurante - partes3
+title Sistema de Restaurante — Casos de Uso - Partes 3
 
 left to right direction
 skinparam actorStyle awesome
@@ -111,3 +111,4 @@ UC_C_ReservarMesa     ..> UC_C_VerificarReserva: <<extend>>
 UC_C_CancelarReserva  ..> UC_C_VerificarReserva: <<extend>>
 
 @enduml
+
