@@ -68,40 +68,6 @@ package "Sistema de Restaurante" as SistemaRestaurante {
   interface "Enviar notificação de alterações no pedido" as I_Sis_AlteracaoPedido
   interface "Oferecer pagamento online"                  as I_Sis_PagamentoOnline
 
-  '=== Componentes que PROVÊEM cada interface (lollipop) ===
-  ' Gerente
-  C_Reservas     - I_VerMesas
-  C_Salao        - I_VerClientes
-  C_Estoque      - I_GerenciarEstoque
-  C_Satisfacao   - I_VerSatisfacao
-
-  ' Chef
-  C_Cozinha      - I_SolicitarGarcom
-  C_Cozinha      - I_GerenciarPrioridade
-  C_Estoque      - I_SolicitarIngredientes
-
-  ' Garçom
-  C_Pedidos      - I_G_RegistrarPedido
-  C_Pedidos      - I_G_VerStatusPedidos
-  C_Reservas     - I_G_VerStatusReserva
-
-  ' Cliente
-  C_Pedidos      - I_C_FazerPedido
-  C_Reservas     - I_C_VerificarReserva
-  C_Satisfacao   - I_C_AvaliarExperiencia
-  C_Cardapio     - I_C_VerCardapio
-  C_Pedidos      - I_C_AlterarPedido
-  C_Pedidos      - I_C_VerStatusPedido
-  C_Reservas     - I_C_ReservarMesa
-  C_Reservas     - I_C_VerMinhaReserva
-  C_Reservas     - I_C_CancelarReserva
-
-  ' Ator Sistema
-  C_Notificacoes - I_Sis_Alergenos
-  C_Notificacoes - I_Sis_Ofertas
-  C_Notificacoes - I_Sis_AlteracaoPedido
-  C_Pagamento    - I_Sis_PagamentoOnline
-
   '=== Dependências entre componentes (internas ao sistema) ===
   C_Pedidos      ..> C_Cardapio       : consulta cardápio
   C_Pedidos      ..> C_Estoque        : checa disponibilidade
