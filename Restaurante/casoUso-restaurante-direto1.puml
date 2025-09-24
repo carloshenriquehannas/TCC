@@ -1,0 +1,154 @@
+@startuml casoUso - restaurante - direto1
+title Sistema de Restaurante — Casos de Uso - Direto 1
+
+left to right direction
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+skinparam usecase {
+  BackgroundColor #FDFDFD
+  BorderColor #555555
+}
+
+'=== Atores (com herança) ===
+actor "Usuário do Sistema" as Usuario
+actor "Cliente" as Cliente
+actor "Funcionário" as Funcionario <<abstract>>
+actor "Gerente" as Gerente
+actor "Chef de Cozinha" as Chef
+actor "Garçom" as Garcom
+actor "Sistema" as Sistema <<system>>
+
+Cliente -|> Usuario
+Funcionario -|> Usuario
+Gerente -|> Funcionario
+Chef -|> Funcionario
+Garcom -|> Funcionario
+
+'=== Fronteira do sistema ===
+rectangle "Sistema de Restaurante" as SistemaRestaurante {
+
+  '--- Reservas ---
+  usecase "Realizar reserva de mesa" as UC_Reserva
+  usecase "Ver minha reserva" as UC_VerReserva
+  usecase "Cancelar minha reserva" as UC_CancelarReserva
+  usecase "Ver disponibilidade de mesas" as UC_VerDispMesas
+
+  '--- Cardápio, Pedido e Pagamento ---
+  usecase "Ver o cardápio" as UC_Cardapio
+  usecase "Fazer um pedido" as UC_FazerPedido
+  usecase "Alterar meu pedido" as UC_AlterarPedido
+  usecase "Ver status do pedido" as UC_StatusPedido
+  usecase "Registrar pedidos de clientes" as UC_RegistrarPedido
+  usecase "Criar/atualizar pedido no sistema" as UC_UpsertPedido
+
+  ' Pagamento (oferta pelo Sistema + ação do Cliente)
+  usecase "Oferecer opção de pagamento online" as UC_OferecerPgto
+  usecase "Pagamento online" as UC_PagamentoOnline
+
+  '--- Avaliação / Satisfação ---
+  usecase "Avaliar a experiência" as UC_Avaliar
+  usecase "Verificar nível de satisfação dos clientes" as UC_Satisfacao
+
+  '--- Operação do salão / loja ---
+  usecase "Verificar quantidade de clientes na loja" as UC_Ocupacao
+
+  '--- Estoque / Cozinha ---
+  usecase "Gerenciar estoque" as UC_Estoque
+  usecase "Verificar disponibilidade de itens do cardápio" as UC_VerDispItens
+  usecase "Gerenciar ordens por prioridade" as UC_PriorizarOrdens
+  usecase "Solicitar garçom para entrega de prato" as UC_SolicitarEntrega
+  usecase "Solicitar novos ingredientes" as UC_SolicitarInsumos
+
+  '--- Notificações do sistema (alertas/ofertas/alterações) ---
+  usecase "Enviar alerta de alérgenos" as UC_AlertasAlergenos
+  usecase "Enviar ofertas" as UC_Ofertas
+  usecase "Notificar alteração no pedido" as UC_NotificarAlteracao
+  usecase "Notificar garçom para entrega" as UC_NotificarGarcom
+}
+
+'=== Associações ator ↔ caso de uso ===
+' Cliente
+Cliente --> UC_Reserva
+Cliente --> UC_VerReserva
+Cliente --> UC_CancelarReserva
+Cliente --> UC_Cardapio
+Cliente --> UC_FazerPedido
+Cliente --> UC_AlterarPedido
+Cliente --> UC_StatusPedido
+Cliente --> UC_Avaliar
+Cliente --> UC_PagamentoOnline
+
+' Gerente
+Gerente --> UC_VerDispMesas
+Gerente --> UC_Ocupacao
+Gerente --> UC_Estoque
+Gerente --> UC_Satisfacao
+Gerente --> UC_VerDispItens
+
+' Chef
+Chef --> UC_SolicitarEntrega
+Chef --> UC_PriorizarOrdens
+Chef --> UC_SolicitarInsumos
+
+' Garçom
+Garcom --> UC_RegistrarPedido
+Garcom --> UC_StatusPedido
+Garcom --> UC_VerReserva
+
+' Sistema (serviços/ações automáticas)
+Sistema --> UC_AlertasAlergenos
+Sistema --> UC_Ofertas
+Sistema --> UC_NotificarAlteracao
+Sistema --> UC_NotificarGarcom
+Sistema --> UC_OferecerPgto
+
+'=== Relações de obrigatoriedade (include) e opcionais (extend) ===
+' Reservas
+UC_Reserva ..> UC_VerDispMesas : <<include>>  ' verificar disponibilidade é obrigatório
+UC_CancelarReserva ..> UC_VerReserva : <<extend>>  ' cancelamento normalmente parte de consultar a reserva
+
+' Pedido / Cardápio
+UC_FazerPedido ..> UC_Cardapio : <<include>>      ' escolher do cardápio é obrigatório
+UC_FazerPedido ..> UC_UpsertPedido : <<include>>   ' persistir pedido é obrigatório
+UC_AlterarPedido ..> UC_UpsertPedido : <<include>> ' atualizar pedido é obrigatório
+UC_RegistrarPedido ..> UC_UpsertPedido : <<include>> ' garçom também persiste pedidos
+
+' Oferta e execução do pagamento online
+UC_OferecerPgto ..> UC_FazerPedido : <<extend>>        ' oferta aparece durante/ao final do pedido
+UC_PagamentoOnline ..> UC_OferecerPgto : <<extend>>     ' cliente aceita a oferta e paga online
+
+' Notificações contextuais
+UC_NotificarAlteracao ..> UC_AlterarPedido : <<extend>>
+UC_AlertasAlergenos ..> UC_Cardapio : <<extend>>
+UC_Ofertas ..> UC_Cardapio : <<extend>>
+
+' Cozinha / Entrega / Estoque
+UC_SolicitarEntrega ..> UC_NotificarGarcom : <<include>>
+UC_Estoque ..> UC_VerDispItens : <<include>>
+UC_SolicitarInsumos ..> UC_Estoque : <<extend>>
+
+' Satisfação (avaliação pós-serviço)
+UC_Avaliar ..> UC_FazerPedido : <<extend>>
+
+'=== Notas de condições para extends (opcionais) ===
+note right of UC_OferecerPgto
+  Condição: pagamento online habilitado e pedido não quitado.
+end note
+
+note right of UC_PagamentoOnline
+  Condição: cliente aceita a oferta de pagar online.
+end note
+
+note right of UC_AlertasAlergenos
+  Condição: item consultado contém alérgenos.
+end note
+
+note right of UC_SolicitarInsumos
+  Condição: níveis de estoque abaixo do limite.
+end note
+
+note right of UC_Avaliar
+  Condição: após consumo/atendimento concluído.
+end note
+
+@enduml
