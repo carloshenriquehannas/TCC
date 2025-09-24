@@ -1,0 +1,59 @@
+@startuml
+title Sistema de Restaurante — Diagrama de Componentes (derivado dos Casos de Uso)
+skinparam componentStyle rectangle
+
+package "Sistema de Restaurante" as SR {
+
+  [Catálogo / Cardápio]            as Catalogo
+  [Gestão de Reservas]             as Reservas
+  [Gestão de Pedidos]              as Pedidos
+  [Cozinha (KDS / Prioridades)]    as Cozinha
+  [Despacho de Garçom]             as Dispatch
+  [Salão / Capacidade]             as Salao
+  [Gestão de Estoque]              as Estoque
+  [Feedback & Analytics]           as Analytics
+  [Serviço de Notificações]        as Notificacoes
+  [Pagamento Online]               as Pagamento
+  [Autenticação & Perfis]          as Auth
+
+  ' Relações internas coerentes com os casos de uso
+  Pedidos ..> Catalogo    : consulta itens
+  Pedidos ..> Cozinha     : envia ordens
+  Cozinha ..> Dispatch    : solicita entrega
+  Estoque ..> Cozinha     : disponibiliza insumos
+  Salao ..> Reservas      : bloqueia/libera mesas
+  Analytics ..> Pedidos   : dados p/ satisfação
+
+  ' Front-ends (atores como clientes)
+  [ClienteApp]  <<external>>
+  [GarcomApp]   <<external>>
+  [GerenteUI]   <<external>>
+
+  ClienteApp ..> Catalogo    : ver cardápio
+  ClienteApp ..> Pedidos     : fazer/alterar/ver status
+  ClienteApp ..> Reservas    : reservar/ver/cancelar
+  ClienteApp ..> Pagamento   : pagar online
+
+  GarcomApp  ..> Pedidos     : registrar/ver status
+  GarcomApp  ..> Reservas    : status de reserva
+
+  GerenteUI  ..> Salao       : mesas/clientes na loja
+  GerenteUI  ..> Estoque     : gerenciar estoque
+  GerenteUI  ..> Analytics   : satisfação
+
+  ' Serviços externos
+  [PSP (Gateway de Pagamento)] as PSP <<external>>
+  [Mensageria (Push/SMS/Email)] as MSG <<external>>
+  Pagamento ..> PSP : integração
+  Notificacoes ..> MSG : entrega
+
+  ' (Opcional) Bancos de dados como componentes
+  database "DB Reservas" as DBR
+  database "DB Pedidos"  as DBP
+  database "DB Estoque"  as DBE
+  Reservas -- DBR
+  Pedidos  -- DBP
+  Estoque  -- DBE
+}
+
+@enduml
