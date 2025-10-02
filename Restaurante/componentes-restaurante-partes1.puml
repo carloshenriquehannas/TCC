@@ -1,5 +1,5 @@
-@startuml
-title Sistema de Restaurante — Diagrama de Componentes (derivado dos Casos de Uso)
+@startuml componentes - restaurante - partes1
+title Sistema de Restaurante — Diagrama Componentes - Partes 1
 skinparam componentStyle rectangle
 
 package "Sistema de Restaurante" as SR {
