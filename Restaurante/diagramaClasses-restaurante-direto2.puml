@@ -1,0 +1,351 @@
+@startuml diagramaClasses - restaurante - direto2
+allowmixing
+title Sistema de Restaurante — Diagrama Classes - Direto 2
+left to right direction
+skinparam classAttributeIconSize 0
+hide methods
+
+' ===================== ENUMS =====================
+enum StatusReserva {
+  PENDENTE
+  CONFIRMADA
+  CANCELADA
+  NO_SHOW
+  FINALIZADA
+}
+enum StatusMesa {
+  LIVRE
+  OCUPADA
+  RESERVADA
+  INATIVA
+}
+enum StatusPedido {
+  CRIADO
+  ENVIADO_COZINHA
+  EM_PREPARO
+  PRONTO
+  ENTREGUE
+  CANCELADO
+}
+enum OrigemPedido {
+  APP
+  MESA
+  TELEFONE
+}
+enum PrioridadeKDS {
+  BAIXA
+  MEDIA
+  ALTA
+}
+enum StatusEntrega {
+  AGUARDANDO
+  EM_ROTA
+  ENTREGUE
+}
+enum MetodoPagamento {
+  CARTAO
+  PIX
+  DINHEIRO
+  ONLINE_PSP
+}
+enum StatusPagamento {
+  PENDENTE
+  AUTORIZADO
+  CAPTURADO
+  NEGADO
+  ESTORNADO
+}
+enum CanalNotificacao {
+  PUSH
+  SMS
+  EMAIL
+}
+enum StatusNotificacao {
+  PENDENTE
+  ENVIADA
+  FALHA
+  LIDA
+}
+enum TipoMovimentoEstoque {
+  ENTRADA
+  SAIDA
+  AJUSTE
+}
+
+' ===================== AUTO & PERFIS =====================
+package "Autenticação & Perfis" {
+  abstract class Usuario {
+    +id: UUID
+    +nome: String
+    +email: String
+    +telefone: String
+    +ativo: Boolean
+    +criadoEm: DateTime
+  }
+
+  class Credencial {
+    +usuarioId: UUID
+    +hashSenha: String
+    +ultimoLogin: DateTime
+    +metodo2FA: String
+    +bloqueado: Boolean
+  }
+
+  abstract class Funcionario {
+    +id: UUID
+    +matricula: String
+    +turno: String
+    +ativo: Boolean
+  }
+
+  class Garcom {
+    +id: UUID
+    +codigoEquipe: String
+  }
+
+  class Gerente {
+    +id: UUID
+    +nivelAcesso: String
+  }
+
+  class ChefCozinha {
+    +id: UUID
+    +estacao: String
+  }
+
+  class Cliente {
+    +id: UUID
+    +cpf: String
+    +alergenos: String
+    +preferencias: String
+  }
+
+  Usuario <|-- Cliente
+  Usuario <|-- Funcionario
+  Funcionario <|-- Garcom
+  Funcionario <|-- Gerente
+  Funcionario <|-- ChefCozinha
+  Usuario "1" o-- "1" Credencial : possui >
+}
+
+' ===================== CATÁLOGO / CARDÁPIO =====================
+package "Catálogo / Cardápio" {
+  class Categoria {
+    +id: UUID
+    +nome: String
+    +descricao: String
+  }
+
+  class ItemCardapio {
+    +id: UUID
+    +nome: String
+    +descricao: String
+    +preco: BigDecimal
+    +ativo: Boolean
+    +tempoPreparoMin: int
+    +alergenicos: String
+  }
+
+  class Ingrediente {
+    +id: UUID
+    +nome: String
+    +unidade: String
+    +estoqueMinimo: float
+    +quantidadeAtual: float
+  }
+
+  class ReceitaIngrediente {
+    +quantidade: float
+    +unidade: String
+  }
+
+  Categoria "1" -- "0..*" ItemCardapio : classifica >
+  ItemCardapio "1" -- "0..*" ReceitaIngrediente
+  Ingrediente "1" -- "0..*" ReceitaIngrediente
+}
+
+' ===================== GESTÃO DE RESERVAS =====================
+package "Gestão de Reservas" {
+  class Mesa {
+    +id: UUID
+    +numero: String
+    +capacidade: int
+    +localizacao: String
+    +status: StatusMesa
+  }
+
+  class Reserva {
+    +id: UUID
+    +dataHora: DateTime
+    +qtdPessoas: int
+    +status: StatusReserva
+    +codigoConfirmacao: String
+    +observacoes: String
+  }
+
+  class AlocacaoMesa {
+    +lugaresUtilizados: int
+  }
+
+  Cliente "1" -- "0..*" Reserva : realiza >
+  Reserva "1" -- "0..*" AlocacaoMesa
+  Mesa    "1" -- "0..*" AlocacaoMesa
+}
+
+' ===================== SALÃO / CAPACIDADE =====================
+package "Salão / Capacidade" {
+  class Ocupacao {
+    +id: UUID
+    +inicio: DateTime
+    +fim: DateTime
+    +qtdClientes: int
+    +status: String
+  }
+  Mesa "1" -- "0..*" Ocupacao : histórico >
+}
+
+' ===================== GESTÃO DE PEDIDOS =====================
+package "Gestão de Pedidos" {
+  class Pedido {
+    +id: UUID
+    +numero: String
+    +dataHora: DateTime
+    +status: StatusPedido
+    +origem: OrigemPedido
+    +observacoes: String
+    +total: BigDecimal
+  }
+
+  class ItemPedido {
+    +id: UUID
+    +quantidade: int
+    +precoUnit: BigDecimal
+    +observacoes: String
+  }
+
+  Pedido "1" -- "1..*" ItemPedido
+  ItemPedido "*" -- "1" ItemCardapio : refere-se a >
+  Cliente "0..1" -- "0..*" Pedido : faz >
+  Mesa "0..1" -- "0..*" Pedido : atende >
+}
+
+' ===================== COZINHA (KDS / Prioridades) =====================
+package "Cozinha (KDS / Prioridades)" {
+  class OrdemCozinha {
+    +id: UUID
+    +prioridade: PrioridadeKDS
+    +status: String
+    +entradaEm: DateTime
+    +prontoEm: DateTime
+    +estacao: String
+  }
+  Pedido "1" -- "0..*" OrdemCozinha : gera >
+}
+
+' ===================== DESPACHO DE GARÇOM =====================
+package "Despacho de Garçom" {
+  class Entrega {
+    +id: UUID
+    +status: StatusEntrega
+    +coletadoEm: DateTime
+    +entregueEm: DateTime
+  }
+  OrdemCozinha "1" -- "0..1" Entrega : atende >
+  Garcom "1" -- "0..*" Entrega : executa >
+}
+
+' ===================== GESTÃO DE ESTOQUE =====================
+package "Gestão de Estoque" {
+  class MovimentoEstoque {
+    +id: UUID
+    +tipo: TipoMovimentoEstoque
+    +quantidade: float
+    +dataHora: DateTime
+    +motivo: String
+    +origemRef: String
+  }
+  Ingrediente "1" -- "0..*" MovimentoEstoque : movimenta >
+}
+
+' ===================== SERVIÇO DE NOTIFICAÇÕES =====================
+package "Serviço de Notificações" {
+  class Notificacao {
+    +id: UUID
+    +canal: CanalNotificacao
+    +titulo: String
+    +mensagem: String
+    +status: StatusNotificacao
+    +criadoEm: DateTime
+    +enviadoEm: DateTime
+  }
+
+  class PreferenciaNotificacao {
+    +id: UUID
+    +canal: CanalNotificacao
+    +ativo: Boolean
+    +alertasAlergenos: Boolean
+    +ofertasPromocoes: Boolean
+  }
+
+  Usuario "1" -- "0..*" Notificacao : recebe >
+  Usuario "1" -- "0..*" PreferenciaNotificacao : define >
+}
+
+' ===================== PAGAMENTO ONLINE =====================
+package "Pagamento Online" {
+  class Pagamento {
+    +id: UUID
+    +valor: BigDecimal
+    +metodo: MetodoPagamento
+    +status: StatusPagamento
+    +pspTransacaoId: String
+    +autorizacao: String
+    +criadoEm: DateTime
+  }
+  Pedido "1" -- "0..*" Pagamento : liquida >
+}
+
+' ===================== FEEDBACK & ANALYTICS =====================
+package "Feedback & Analytics" {
+  class Feedback {
+    +id: UUID
+    +nota: int
+    +comentario: String
+    +criadoEm: DateTime
+  }
+  Pedido  "1" -- "0..*" Feedback
+  Cliente "1" -- "0..*" Feedback
+}
+
+' ===================== FRONT-ENDS (boundary) & ATORES =====================
+package "Front-ends (boundary)" {
+  class ClienteApp <<boundary>>
+  class GarcomApp <<boundary>>
+  class GerenteUI <<boundary>>
+}
+' Atores necessários
+actor "Cliente" as AtorCliente
+actor "Garçom" as AtorGarcom
+actor "Gerente" as AtorGerente
+actor "Chef de Cozinha" as AtorChef
+
+' Ligações ator -> fronteira -> domínio (coerentes com o diagrama de componentes)
+AtorCliente --> ClienteApp
+ClienteApp ..> Pedido  : criar/consultar
+ClienteApp ..> Reserva : reservar/gerir
+ClienteApp ..> Pagamento : pagar
+
+AtorGarcom --> GarcomApp
+GarcomApp ..> Pedido   : registrar status
+GarcomApp ..> Entrega  : despachar
+
+AtorGerente --> GerenteUI
+GerenteUI ..> MovimentoEstoque : gerenciar
+GerenteUI ..> Feedback : ver métricas
+GerenteUI ..> Ocupacao : ver salão
+
+AtorChef --> OrdemCozinha : prepara >
+
+' ===================== NOTAS DE MAPEAMENTO (opcional, não afeta o diagrama) =====================
+note "Classes agrupadas por pacote conforme os componentes:\n- Catálogo/Cardápio → ItemCardapio, Categoria, Ingrediente, ReceitaIngrediente\n- Reservas/Salão → Reserva, Mesa, AlocacaoMesa, Ocupacao\n- Pedidos/KDS/Despacho → Pedido, ItemPedido, OrdemCozinha, Entrega\n- Estoque → Ingrediente, MovimentoEstoque\n- Pagamento → Pagamento\n- Notificações → Notificacao, PreferenciaNotificacao\n- Auth/Perfis → Usuario, Credencial, Cliente, Garcom, Gerente, ChefCozinha" as N0
+@enduml

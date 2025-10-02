@@ -1,0 +1,62 @@
+@startuml diagramaClasses - restaurante - direto1
+title Sistema de Restaurante — Diagrama Classes - Direto 1
+skinparam classAttributeIconSize 0
+
+package "Sistema de Restaurante" as SR {
+
+  '=== Classes internas (espelhando componentes) ===
+  class "Catálogo / Cardápio"         as Catalogo
+  class "Gestão de Reservas"          as Reservas
+  class "Gestão de Pedidos"           as Pedidos
+  class "Cozinha (KDS / Prioridades)" as Cozinha
+  class "Despacho de Garçom"          as Dispatch
+  class "Salão / Capacidade"          as Salao
+  class "Gestão de Estoque"           as Estoque
+  class "Feedback & Analytics"        as Analytics
+  class "Serviço de Notificações"     as Notificacoes
+  class "Pagamento Online"            as Pagamento
+  class "Autenticação & Perfis"       as Auth
+
+  '=== Front-ends (externos) ===
+  class ClienteApp  <<external>>
+  class GarcomApp   <<external>>
+  class GerenteUI   <<external>>
+
+  '=== Serviços externos ===
+  class "PSP (Gateway de Pagamento)"       as PSP <<external>>
+  class "Mensageria (Push/SMS/Email)"      as MSG <<external>>
+
+  '=== Bancos de dados (como classes estereotipadas) ===
+  class "DB Reservas" as DBR <<database>>
+  class "DB Pedidos"  as DBP <<database>>
+  class "DB Estoque"  as DBE <<database>>
+
+  '=== Relações (mapeadas 1:1 a partir do diagrama de componentes) ===
+  Pedidos   ..> Catalogo    : consulta itens
+  Pedidos   ..> Cozinha     : envia ordens
+  Cozinha   ..> Dispatch    : solicita entrega
+  Estoque   ..> Cozinha     : disponibiliza insumos
+  Salao     ..> Reservas    : bloqueia/libera mesas
+  Analytics ..> Pedidos     : dados p/ satisfação
+
+  ClienteApp ..> Catalogo    : ver cardápio
+  ClienteApp ..> Pedidos     : fazer/alterar/ver status
+  ClienteApp ..> Reservas    : reservar/ver/cancelar
+  ClienteApp ..> Pagamento   : pagar online
+
+  GarcomApp  ..> Pedidos     : registrar/ver status
+  GarcomApp  ..> Reservas    : status de reserva
+
+  GerenteUI  ..> Salao       : mesas/clientes na loja
+  GerenteUI  ..> Estoque     : gerenciar estoque
+  GerenteUI  ..> Analytics   : satisfação
+
+  Pagamento     ..> PSP  : integração
+  Notificacoes  ..> MSG  : entrega
+
+  Reservas -- DBR
+  Pedidos  -- DBP
+  Estoque  -- DBE
+}
+
+@enduml
