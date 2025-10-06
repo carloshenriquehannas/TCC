@@ -1,0 +1,200 @@
+@startuml
+title Sistema de Restaurante — Modelo de Classes (a partir das user stories)
+hide circle
+skinparam classAttributeIconSize 0
+
+' ========================
+' Pessoas
+' ========================
+class Cliente {
+  +id: UUID
+  +nome: String
+  +telefone: String
+  +email: String
+}
+
+abstract class Funcionario {
+  +id: UUID
+  +nome: String
+  +matricula: String
+  +turno: String
+}
+
+class Gerente
+class Chef
+class Garcom
+
+Funcionario <|-- Gerente
+Funcionario <|-- Chef
+Funcionario <|-- Garcom
+
+' ========================
+' Salão e Mesas
+' ========================
+class Salao {
+  +id: UUID
+  +nome: String
+  +capacidadeTotal: int
+}
+
+class Mesa {
+  +id: UUID
+  +numero: int
+  +lugares: int
+  +status: MesaStatus
+}
+
+Salao "1" o-- "1..*" Mesa : contém
+Garcom "1" -- "1..*" Mesa : atende   ' <<< ADICIONADO
+
+' ========================
+' Reservas
+' ========================
+class Reserva {
+  +id: UUID
+  +codigo: String
+  +dataHora: DateTime
+  +numPessoas: int
+  +status: ReservaStatus
+  +dataCriacao: DateTime
+}
+
+Cliente "1" -- "0..*" Reserva : faz
+Reserva "1" -- "1" Mesa : ocupa
+
+' ========================
+' Cardápio
+' ========================
+class Cardapio {
+  +id: UUID
+  +nome: String
+  +vigenciaInicio: Date
+  +vigenciaFim: Date
+}
+
+class ItemCardapio {
+  +id: UUID
+  +nome: String
+  +descricao: String
+  +preco: decimal
+  +ativo: bool
+}
+
+Cardapio "1" o-- "1..*" ItemCardapio : lista
+Cliente "0..*" .. "0..*" Cardapio : visualiza  ' <<< ADICIONADO
+
+' ========================
+' Estoque e Ingredientes
+' ========================
+class Estoque {
+  +id: UUID
+  +nome: String
+}
+
+class Ingrediente {
+  +id: UUID
+  +nome: String
+  +unidade: UnidadeMedida
+  +qtdAtual: decimal
+  +pontoReposicao: decimal
+}
+
+Estoque "1" o-- "1..*" Ingrediente : guarda
+
+' Classe de associação: composição/receita do item do cardápio
+class IngredienteNecessario {
+  +id: UUID
+  +quantidade: decimal
+}
+
+ItemCardapio "1" o-- "0..*" IngredienteNecessario
+Ingrediente "1" o-- "0..*" IngredienteNecessario
+
+' ========================
+' Pedidos
+' ========================
+class Pedido {
+  +id: UUID
+  +codigo: String
+  +horarioCriacao: DateTime
+  +status: PedidoStatus
+  +total: decimal
+  +dataUltimaAlteracao: DateTime
+}
+
+class ItemPedido {
+  +id: UUID
+  +quantidade: int
+  +precoUnitario: decimal
+  +observacoes: String
+}
+
+Cliente "1" -- "0..*" Pedido : realiza
+Reserva "0..1" -- "0..*" Pedido : vincula
+Pedido "1" -- "1..*" ItemPedido : contém
+ItemPedido "1" --> "1" ItemCardapio : refere-se a
+Garcom "1" -- "0..*" Pedido : registra
+
+' ========================
+' Cozinha (KDS) e Prioridades
+' ========================
+class OrdemCozinha {
+  +id: UUID
+  +prioridade: int
+  +status: OrdemStatus
+  +horaEntradaFila: DateTime
+  +horaConclusao: DateTime
+}
+
+ItemPedido "1" -- "1" OrdemCozinha : gera
+Chef "1" -- "0..*" OrdemCozinha : gerencia
+
+' ========================
+' Dispatch (Chamado ao Garçom para entrega)
+' ========================
+class ChamadoEntrega {
+  +id: UUID
+  +horaSolicitacao: DateTime
+  +status: EntregaStatus
+}
+
+OrdemCozinha "1" -- "0..1" ChamadoEntrega : dispara
+Garcom "0..1" -- "0..*" ChamadoEntrega : atende
+
+' ========================
+' Requisições de ingredientes (Chef -> Estoque/Compras)
+' ========================
+class RequisicaoIngrediente {
+  +id: UUID
+  +dataSolicitacao: DateTime
+  +status: RequisicaoStatus
+  +observacoes: String
+}
+
+class RequisicaoItem {
+  +id: UUID
+  +quantidade: decimal
+  +unidade: UnidadeMedida
+}
+
+Chef "1" -- "0..*" RequisicaoIngrediente : solicita
+RequisicaoIngrediente "1" o-- "1..*" RequisicaoItem : contém
+RequisicaoItem "1" --> "1" Ingrediente : do
+
+' ========================
+' Feedback & Analytics
+' ========================
+class Avaliacao {
+  +id: UUID
+  +nota: int
+  +comentario: String
+  +data: DateTime
+}
+
+Cliente "1" -- "0..*" Avaliacao : emite
+Avaliacao "0..1" -- "0..1" Pedido : sobre
+Gerente "1" .. "0..*" Avaliacao : consulta
+Gerente "1" .. "1" Salao : gerencia
+Gerente "1" .. "1" Estoque : supervisiona
+
+@enduml

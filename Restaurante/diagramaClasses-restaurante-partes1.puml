@@ -1,0 +1,325 @@
+@startuml
+title Sistema de Restaurante — Diagrama de Classes (complementado pelos Componentes - Partes 1)
+
+skinparam classAttributeIconSize 0
+
+'=== Enumerações ===
+enum StatusPedido {
+  NOVO
+  EM_PREPARO
+  PRONTO
+  EM_ENTREGA
+  CONCLUIDO
+  CANCELADO
+}
+
+enum StatusReserva {
+  PENDENTE
+  CONFIRMADA
+  CANCELADA
+  EXPIRADA
+  CUMPRIDA
+}
+
+enum Prioridade {
+  BAIXA
+  MEDIA
+  ALTA
+  URGENTE
+}
+
+enum TipoNotificacao {
+  ALERGENO
+  OFERTA
+  ALTERACAO_PEDIDO
+  PAGAMENTO
+}
+
+'=== Usuários ===
+class Usuario {
+  +id: UUID
+  +nome: String
+  +email: String
+  +telefone: String
+}
+
+abstract class Funcionario {
+  +matricula: String
+  +turno: String
+}
+
+class Garcom {
+}
+
+class Chef {
+}
+
+class Gerente {
+}
+
+class Cliente {
+  +id: UUID
+  +cpf: String
+  +preferenciasAlergenos: Set<String>
+}
+
+Usuario <|-- Cliente
+Usuario <|-- Funcionario
+Funcionario <|-- Garcom
+Funcionario <|-- Chef
+Funcionario <|-- Gerente
+
+'=== Domínio: Cardápio & Pedidos ===
+class Cardapio {
+  -itens: List<ItemCardapio>
+}
+
+class ItemCardapio {
+  +id: UUID
+  +nome: String
+  +descricao: String
+  +preco: Money
+  +alergenos: Set<String>
+}
+
+class Pedido {
+  +id: UUID
+  +dataHora: DateTime
+  +status: StatusPedido
+  -itens: List<ItemPedido>
+}
+
+class ItemPedido {
+  +id: UUID
+  +quantidade: int
+  +precoUnit: Money
+}
+
+Pedido "1" o-- "1..*" ItemPedido
+ItemPedido "*" --> "1" ItemCardapio
+Cardapio "1" o-- "*" ItemCardapio
+
+'=== Cozinha & Prioridades ===
+class Cozinha {
+}
+
+class OrdemCozinha {
+  +id: UUID
+  +prioridade: Prioridade
+  +timestamp: DateTime
+}
+
+class FilaPrioridades {
+  -ordens: List<OrdemCozinha>
+}
+
+Cozinha "1" -- "0..*" OrdemCozinha
+OrdemCozinha "*" --> "1" Pedido
+FilaPrioridades "*" --> "*" OrdemCozinha
+
+'=== Salão & Reservas ===
+class Salao {
+  -mesas: List<Mesa>
+}
+
+class Mesa {
+  +id: UUID
+  +capacidade: int
+  +ocupada: bool
+}
+
+class Reserva {
+  +id: UUID
+  +dataHora: DateTime
+  +qtdPessoas: int
+  +status: StatusReserva
+}
+
+Salao "1" o-- "*" Mesa
+Cliente "1" -- "0..*" Reserva
+Reserva "1" --> "1" Mesa
+
+'=== Estoque & Ingredientes ===
+class Estoque {
+  -itens: List<ItemEstoque>
+}
+
+class ItemEstoque {
+  +id: UUID
+  +ingrediente: Ingrediente
+  +quantidade: float
+  +unidade: String
+  +nivelMinimo: float
+}
+
+class Ingrediente {
+  +id: UUID
+  +nome: String
+  +alergeno: bool
+}
+
+Estoque "1" o-- "*" ItemEstoque
+ItemEstoque "*" --> "1" Ingrediente
+ItemCardapio "*" --> "*" Ingrediente
+
+'=== Avaliação (Satisfação) ===
+class Avaliacao {
+  +id: UUID
+  +nota: int
+  +comentario: String
+  +dataHora: DateTime
+}
+
+Avaliacao "*" --> "1" Pedido
+Avaliacao "*" --> "1" Cliente
+
+'=== Notificações & Pagamento Online ===
+class Notificacao {
+  +id: UUID
+  +tipo: TipoNotificacao
+  +mensagem: String
+}
+
+class NotificacaoService <<service>> {
+}
+
+class Pagamento {
+  +id: UUID
+  +valor: Money
+  +status: String
+}
+
+class PagamentoOnlineService <<service>> {
+}
+
+Notificacao "*" --> "1" Usuario
+NotificacaoService ..> Notificacao
+Pedido "1" --> "0..1" Pagamento
+
+'=== Vínculos operacionais (mantidos) ===
+Cliente "1" -- "0..*" Pedido : cria
+Garcom "1" -- "0..*" Pedido : registra
+Chef "1" -- "0..*" OrdemCozinha : gerencia
+Gerente ..> Estoque
+Gerente ..> Salao
+Gerente ..> Avaliacao
+
+'==========================================================
+'=== Complementos mapeando os Componentes (Partes 1)    ===
+'==========================================================
+
+'--- Serviços (aplicação) correspondentes aos componentes ---
+class CatalogoService <<service>> {
+}
+class PedidoService <<service>> {
+}
+class ReservaService <<service>> {
+}
+class EstoqueService <<service>> {
+}
+class DespachoGarcom <<service>> {
+  -filaEntregas: List<OrdemCozinha>
+}
+class AnalyticsService <<service>> {
+  +ultimaAtualizacao: DateTime
+}
+class AuthService <<service>> {
+}
+
+'--- Repositórios & Bancos (componentes DB) ---
+class PedidoRepository <<repository>> {
+}
+class ReservaRepository <<repository>> {
+}
+class EstoqueRepository <<repository>> {
+}
+
+class DBP <<database>> {
+}
+class DBR <<database>> {
+}
+class DBE <<database>> {
+}
+
+PedidoRepository -- DBP
+ReservaRepository -- DBR
+EstoqueRepository -- DBE
+
+PedidoService ..> PedidoRepository
+ReservaService ..> ReservaRepository
+EstoqueService ..> EstoqueRepository
+
+'--- Integrações externas (PSP e Mensageria) ---
+class PSPGateway <<external>> {
+}
+class Mensageria <<external>> {
+}
+
+PagamentoOnlineService ..> PSPGateway
+NotificacaoService ..> Mensageria
+
+'--- Front-ends (clientes) ---
+class ClienteApp <<external>> {
+}
+class GarcomApp <<external>> {
+}
+class GerenteUI <<external>> {
+}
+
+'--- Autenticação & Perfis ---
+class Credencial {
+  +login: String
+  +hashSenha: String
+  +ativo: bool
+}
+class Perfil {
+  +nome: String
+}
+
+Usuario "1" -- "1" Credencial
+Usuario "1" -- "1..*" Perfil
+ClienteApp ..> AuthService
+GarcomApp  ..> AuthService
+GerenteUI  ..> AuthService
+AuthService ..> Usuario
+AuthService ..> Credencial
+AuthService ..> Perfil
+
+'--- Ligações entre serviços conforme os componentes ---
+' Pedidos consulta Catálogo e envia ordens à Cozinha
+PedidoService ..> CatalogoService
+PedidoService ..> Cozinha
+
+' Cozinha solicita despacho de garçom
+Cozinha ..> DespachoGarcom
+
+' Estoque disponibiliza insumos para a Cozinha
+EstoqueService ..> Cozinha
+EstoqueService ..> Estoque
+
+' Salão bloqueia/libera mesas via Gestão de Reservas
+Salao ..> ReservaService
+
+' Analytics consome dados de Pedidos
+AnalyticsService ..> PedidoService
+
+' Catálogo cobre o domínio de Cardápio
+CatalogoService ..> Cardapio
+
+' Pagamento Online relacionado a Pedido
+PagamentoOnlineService ..> Pagamento
+
+'--- Ligações dos front-ends aos serviços (de acordo com componentes) ---
+ClienteApp ..> CatalogoService       : ver cardápio
+ClienteApp ..> PedidoService         : fazer/alterar/ver status
+ClienteApp ..> ReservaService        : reservar/ver/cancelar
+ClienteApp ..> PagamentoOnlineService: pagar online
+
+GarcomApp  ..> PedidoService         : registrar/ver status
+GarcomApp  ..> ReservaService        : status de reserva
+
+GerenteUI  ..> Salao                 : mesas/clientes
+GerenteUI  ..> EstoqueService        : gerenciar estoque
+GerenteUI  ..> AnalyticsService      : satisfação
+
+@enduml
