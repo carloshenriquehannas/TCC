@@ -1,0 +1,92 @@
+@startuml
+actor "Usuário do Sistema" as UsuarioDoSistema
+actor "Membro da comunidade USP" as MembroDaComunidadeUSP
+actor "Bibliotecário" as Bibliotecario
+actor "Administrador" as Administrador
+actor "Sistema" as Sistema
+
+MembroDaComunidadeUSP --|> UsuarioDoSistema
+Bibliotecario --|> UsuarioDoSistema
+Administrador --|> UsuarioDoSistema
+
+' Casos de uso do Membro da comunidade USP
+usecase "Gerenciar Reserva" as UC_GerenciarReserva
+usecase "Cadastrar Perfil na Plataforma" as UC_CadastrarPerfil
+usecase "Alterar Informações Pessoais" as UC_AlterarInfos
+usecase "Consultar Informações de Salas e Equipamentos" as UC_ConsultarSalasEquip
+usecase "Verificar Disponibilidade da Sala" as UC_VerificarDisponibilidade
+usecase "Filtrar Salas por Local, Capacidade e Horários" as UC_FiltrarSalas
+usecase "Reservar Sala para Uso Específico" as UC_ReservarSala
+usecase "Cancelar Minha Reserva" as UC_CancelarReserva
+usecase "Convidar Pessoas para Participar da Reserva" as UC_ConvidarPessoas
+usecase "Receber Notificações por E-mail sobre a Reserva" as UC_ReceberNotificacoes
+
+' Associações do ator Membro da comunidade USP
+MembroDaComunidadeUSP --> UC_CadastrarPerfil
+MembroDaComunidadeUSP --> UC_AlterarInfos
+MembroDaComunidadeUSP --> UC_ConsultarSalasEquip
+MembroDaComunidadeUSP --> UC_GerenciarReserva
+
+' Casos de uso relacionados à reserva (extend partindo de "Gerenciar Reserva")
+UC_GerenciarReserva ..> UC_VerificarDisponibilidade : <<extend>>
+UC_GerenciarReserva ..> UC_FiltrarSalas : <<extend>>
+UC_GerenciarReserva ..> UC_ReservarSala : <<extend>>
+UC_GerenciarReserva ..> UC_CancelarReserva : <<extend>>
+UC_GerenciarReserva ..> UC_ConvidarPessoas : <<extend>>
+UC_GerenciarReserva ..> UC_ReceberNotificacoes : <<extend>>
+
+' Casos de uso do Administrador
+usecase "Gerenciar Perfis de Usuários" as UC_Admin_GerenciarPerfis
+usecase "Monitorar Operações do Sistema" as UC_Admin_MonitorarOperacoes
+usecase "Cadastrar Bibliotecário no Sistema" as UC_Admin_CadastrarBibliotecario
+
+' Associações do ator Administrador
+Administrador --> UC_Admin_GerenciarPerfis
+Administrador --> UC_Admin_MonitorarOperacoes
+Administrador --> UC_Admin_CadastrarBibliotecario
+
+' Casos de uso do Bibliotecário
+usecase "Gerenciar Sala" as UC_Bib_GerenciarSala
+usecase "Cadastrar Sala no Sistema" as UC_Bib_CadastrarSala
+usecase "Alterar Informações da Sala no Sistema" as UC_Bib_AlterarSala
+usecase "Bloquear Sala para Reserva" as UC_Bib_BloquearSala
+usecase "Excluir Sala do Sistema" as UC_Bib_ExcluirSala
+
+usecase "Gerenciar Equipamento" as UC_Bib_GerenciarEquipamento
+usecase "Cadastrar Equipamento no Sistema" as UC_Bib_CadastrarEquipamento
+usecase "Bloquear Equipamento de uma Sala" as UC_Bib_BloquearEquipamento
+usecase "Excluir Equipamento de uma Sala do Sistema" as UC_Bib_ExcluirEquipamento
+
+usecase "Cancelar Reservas de Outros Usuários" as UC_Bib_CancelarReservasOutros
+
+' Associações do ator Bibliotecário
+Bibliotecario --> UC_Bib_GerenciarSala
+Bibliotecario --> UC_Bib_GerenciarEquipamento
+Bibliotecario --> UC_Bib_CancelarReservasOutros
+
+' Extensões a partir de "Gerenciar Sala"
+UC_Bib_GerenciarSala ..> UC_Bib_CadastrarSala : <<extend>>
+UC_Bib_GerenciarSala ..> UC_Bib_AlterarSala : <<extend>>
+UC_Bib_GerenciarSala ..> UC_Bib_BloquearSala : <<extend>>
+UC_Bib_GerenciarSala ..> UC_Bib_ExcluirSala : <<extend>>
+UC_Bib_GerenciarSala ..> UC_Bib_CancelarReservasOutros : <<extend>>
+
+' Extensões a partir de "Gerenciar Equipamento"
+UC_Bib_GerenciarEquipamento ..> UC_Bib_CadastrarEquipamento : <<extend>>
+UC_Bib_GerenciarEquipamento ..> UC_Bib_BloquearEquipamento : <<extend>>
+UC_Bib_GerenciarEquipamento ..> UC_Bib_ExcluirEquipamento : <<extend>>
+
+' Casos de uso do Sistema
+usecase "Enviar Notificações Automáticas sobre o Status das Reservas" as UC_Sis_EnviarNotificacoes
+usecase "Processar Reservas de Maneira Precisa" as UC_Sis_ProcessarReservas
+usecase "Registrar Logs das Atividades de Todos os Usuários" as UC_Sis_RegistrarLogs
+usecase "Realizar Backups Periódicos dos Dados Armazenados" as UC_Sis_BackupsPeriodicos
+usecase "Atualizar o Status das Reservas Automaticamente em Caso de Sala Bloqueada ou Excluída" as UC_Sis_AtualizarStatusReservas
+
+' Associações do ator Sistema
+Sistema --> UC_Sis_EnviarNotificacoes
+Sistema --> UC_Sis_ProcessarReservas
+Sistema --> UC_Sis_RegistrarLogs
+Sistema --> UC_Sis_BackupsPeriodicos
+Sistema --> UC_Sis_AtualizarStatusReservas
+@enduml
