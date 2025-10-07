@@ -1,0 +1,37 @@
+@startuml
+' Atores
+actor "Usuário do Sistema" as UsuarioDoSistema
+actor "Membro da comunidade USP" as MembroDaComunidadeUSP
+actor "Bibliotecário" as Bibliotecario
+actor "Administrador" as Administrador
+actor "Sistema" as Sistema
+
+' Relações entre atores (conforme diagrama de casos de uso)
+MembroDaComunidadeUSP --|> UsuarioDoSistema
+Bibliotecario --|> UsuarioDoSistema
+Administrador --|> UsuarioDoSistema
+
+' Componentes
+component "gestão de reserva"
+component "gestão de usuários"
+component "gestão de equipamentos"
+component "gestão de salas"
+component "monitoramento do sistema"
+component "monitoramento & logs"
+
+' Relações ator–componente (mesma semântica e sintaxe dos casos de uso)
+MembroDaComunidadeUSP --> "gestão de usuários"
+MembroDaComunidadeUSP --> "gestão de salas"
+MembroDaComunidadeUSP --> "gestão de equipamentos"
+MembroDaComunidadeUSP --> "gestão de reserva"
+
+Bibliotecario --> "gestão de salas"
+Bibliotecario --> "gestão de equipamentos"
+Bibliotecario --> "gestão de reserva"
+
+Administrador --> "gestão de usuários"
+Administrador --> "monitoramento do sistema"
+
+Sistema --> "gestão de reserva"
+Sistema --> "monitoramento & logs"
+@enduml
