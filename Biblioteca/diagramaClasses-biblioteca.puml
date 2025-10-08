@@ -1,0 +1,107 @@
+@startuml
+' Diagrama de Classes — acrescentada a classe Notificação (envio pelo Sistema aos usuários)
+
+class "Usuário do Sistema" as UsuarioDoSistema {
+  +id: UUID
+  +nome: String
+  +email: String
+  +telefone: String
+  +dataCadastro: DateTime
+  +ativo: Boolean
+}
+
+class "Membro da comunidade USP" as MembroDaComunidadeUSP {
+  +numeroUSP: String
+  +unidadeAcademica: String
+  +cursoOuVinculo: String
+  +preferenciasNotificacaoEmail: Boolean
+}
+
+class "Bibliotecário" as Bibliotecario {
+  +matriculaFuncional: String
+  +unidadeBiblioteca: String
+  +turno: String
+}
+
+class "Administrador" as Administrador {
+  +nivelAcesso: String
+  +areaResponsavel: String
+}
+
+class "Sistema" as Sistema {
+  +versao: String
+  +statusOperacional: String
+  +ultimaExecucaoBackup: DateTime
+  +fusoHorario: String
+}
+
+class Biblioteca {
+  +id: UUID
+  +nome: String
+  +campus: String
+  +endereco: String
+  +emailContato: String
+  +telefoneContato: String
+  +horarioFuncionamento: String
+  +status: String
+}
+
+class Sala {
+  +id: UUID
+  +nome: String
+  +local: String
+  +capacidade: Integer
+  +descricao: String
+  +status: String
+}
+
+class Reserva {
+  +id: UUID
+  +codigo: String
+  +dataHoraInicio: DateTime
+  +dataHoraFim: DateTime
+  +status: String
+  +finalidade: String
+  +criadoEm: DateTime
+  +atualizadoEm: DateTime
+}
+
+class Equipamento {
+  +id: UUID
+  +nome: String
+  +tipo: String
+  +descricao: String
+  +status: String
+  +serialPatrimonio: String
+}
+
+class Notificacao {
+  +id: UUID
+  +tipo: String           ' ex.: CONFIRMACAO, ALTERACAO, CANCELAMENTO
+  +canal: String          ' ex.: EMAIL
+  +assunto: String
+  +mensagem: String
+  +statusEnvio: String    ' ex.: PENDENTE, ENVIADA, FALHA, ENTREGUE, LIDA
+  +criadaEm: DateTime
+  +enviadaEm: DateTime
+  +lidaEm: DateTime
+}
+
+' Heranças (atores)
+MembroDaComunidadeUSP --|> UsuarioDoSistema
+Bibliotecario --|> UsuarioDoSistema
+Administrador --|> UsuarioDoSistema
+
+' Relações de domínio com multiplicidades (existentes)
+Biblioteca "1" *-- "1..*" Sala : contém
+Biblioteca "1" -- "0..*" Bibliotecario : lota
+MembroDaComunidadeUSP "1" -- "0..*" Reserva : cria/gerencia
+Sala "1" -- "0..*" Reserva : é reservada em
+Sala "1" *-- "0..*" Equipamento : contém
+Bibliotecario "0..*" -- "0..*" Sala : administra
+Bibliotecario "0..*" -- "0..*" Equipamento : administra
+
+' Novas relações de Notificação (Sistema envia para usuários)
+Sistema "1" -- "0..*" Notificacao : envia
+UsuarioDoSistema "1" -- "0..*" Notificacao : recebe
+@enduml
