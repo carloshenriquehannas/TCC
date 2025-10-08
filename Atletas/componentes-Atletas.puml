@@ -1,0 +1,53 @@
+@startuml
+title Sistema Esportivo — Diagrama de Componentes (versão condensada)
+skinparam componentStyle rectangle
+skinparam actorStyle awesome
+
+component "Conteúdo & Mídia"      as ConteudoMidia
+component "Gestão de Patrocínios" as GestaoPatrocinios
+component "Gestão de Atletas"     as GestaoAtletas
+component "Gestão de Clubes"      as GestaoClubes
+component "Calendários"           as Calendarios
+component "Comunicação"           as Comunicacao
+database  "Base de Dados"         as BaseDeDados
+
+actor "Atleta" as Atleta
+actor "Patrocinador" as Patrocinador
+actor "<<abstract>> Representante" as Representante
+actor "Representante de Agência Esportiva" as RepAgencia
+actor "Representante de Clube Esportivo" as RepClube
+
+Representante <|-- RepAgencia
+Representante <|-- RepClube
+
+' Relacionamentos do Atleta com componentes
+Atleta ..> ConteudoMidia
+Atleta ..> GestaoPatrocinios
+Atleta ..> Calendarios
+Atleta ..> Comunicacao
+
+' Relacionamentos do Patrocinador com componentes (coerentes com uso real; sem acesso direto ao banco)
+Patrocinador ..> ConteudoMidia
+Patrocinador ..> GestaoPatrocinios
+Patrocinador ..> GestaoAtletas
+Patrocinador ..> Comunicacao
+
+' Componentes acessam a base de dados
+ConteudoMidia      ..> BaseDeDados
+GestaoPatrocinios  ..> BaseDeDados
+GestaoAtletas      ..> BaseDeDados
+GestaoClubes       ..> BaseDeDados
+Calendarios        ..> BaseDeDados
+Comunicacao        ..> BaseDeDados
+
+' Relacionamentos do Representante de Clube com componentes (sem relação com Gestão de Patrocínios)
+RepClube ..> GestaoClubes
+RepClube ..> GestaoAtletas
+RepClube ..> Calendarios
+RepClube ..> Comunicacao
+
+' Relacionamentos do Representante de Agência Esportiva com componentes (sem relação com Gestão de Patrocínios)
+RepAgencia ..> GestaoAtletas
+RepAgencia ..> Calendarios
+RepAgencia ..> Comunicacao
+@enduml

@@ -1,0 +1,92 @@
+@startuml
+title Sistema Esportivo — Casos de Uso: Atleta, Patrocinador, Agência e Clube (com include/extend)
+
+left to right direction
+skinparam actorStyle awesome
+
+' =======================
+' Atores
+' =======================
+actor "Atleta" as Atleta
+actor "Patrocinador" as Patrocinador
+
+actor "<<abstract>> Representante" as Representante
+actor "Representante de Agência Esportiva" as RepAgencia
+actor "Representante de Clube Esportivo" as RepClube
+
+Representante <|-- RepAgencia
+Representante <|-- RepClube
+
+' =======================
+' Casos de uso — Atleta
+' =======================
+usecase "Criar e publicar postagens\n(fotos, vídeos e textos)" as UC_Postagens
+usecase "Interagir com patrocinadores\n(discutir contratos e receber feedback)" as UC_InteragirPatroc
+usecase "Acessar calendário de\ncompetições e eventos esportivos" as UC_Calendario
+
+Atleta -- UC_Postagens
+Atleta -- UC_InteragirPatroc
+Atleta -- UC_Calendario
+
+Patrocinador -- UC_InteragirPatroc
+
+' =======================
+' Casos de uso — Patrocinador
+' =======================
+usecase "Gerenciar e acompanhar atletas\npatrocinados (maximizar investimento,\navaliar impacto e benefícios)" as UC_GerenciarAcompanhar
+usecase "Revisar e aprovar conteúdo\npostado por atletas patrocinados" as UC_AprovarConteudo
+usecase "Acessar relatórios detalhados\nsobre desempenho dos atletas patrocinados\n(ROI e impacto das campanhas)" as UC_Relatorios
+
+Patrocinador -- UC_GerenciarAcompanhar
+Patrocinador -- UC_AprovarConteudo
+Patrocinador -- UC_Relatorios
+
+' =======================
+' Casos de uso — Representante de Agência
+' =======================
+usecase "Gerenciar e acompanhar carreira dos atletas\nrepresentados e contratos de patrocínio negociados\n(assegurar suporte, maximizar valor e qualidade do serviço)" as UC_GerenciarCarreiraContratos
+usecase "Monitorar progresso dos atletas representados\n(apoio em competições e garantia de metas)" as UC_MonitorarProgresso
+usecase "Negociar contratos de patrocínio com patrocinadores\nem nome dos atletas" as UC_NegociarContratos
+
+RepAgencia -- UC_GerenciarCarreiraContratos
+RepAgencia -- UC_MonitorarProgresso
+RepAgencia -- UC_NegociarContratos
+Patrocinador -- UC_NegociarContratos
+
+' =======================
+' Casos de uso — Representante de Clube
+' =======================
+usecase "Gerenciar informações do clube e acompanhar\natletas associados (garantir suporte e dados precisos)" as UC_Clube_GerenciarInfoEAcompanhar
+usecase "Gerenciar participação dos atletas em\neventos e competições (organizar calendário da equipe\ne garantir preparação)" as UC_Clube_GerenciarParticipacao
+usecase "Manter informações do clube sempre atualizadas\n(incluindo detalhes de patrocinadores e atletas)" as UC_Clube_ManterInfos
+
+RepClube -- UC_Clube_GerenciarInfoEAcompanhar
+RepClube -- UC_Clube_GerenciarParticipacao
+RepClube -- UC_Clube_ManterInfos
+
+' =======================
+' Relações include / extend (sist. real)
+' =======================
+
+' 1) Patrocinador aprova conteúdo como etapa opcional da publicação do atleta
+UC_AprovarConteudo .> UC_Postagens : <<extend>>
+
+' 2) Patrocinador, ao gerir/acompanhar, reutiliza relatórios detalhados
+UC_GerenciarAcompanhar .> UC_Relatorios : <<include>>
+
+' 3) Agência: gestão de carreira/contratos engloba monitoramento contínuo
+UC_GerenciarCarreiraContratos .> UC_MonitorarProgresso : <<include>>
+
+' 4) Agência: negociação ocorre como extensão da gestão quando há (re)negociação
+UC_NegociarContratos .> UC_GerenciarCarreiraContratos : <<extend>>
+
+' 5) Clube: gestão de info/acompanhamento inclui manutenção de dados do clube
+UC_Clube_GerenciarInfoEAcompanhar .> UC_Clube_ManterInfos : <<include>>
+
+' 6) Clube: gestão de participação depende do acesso ao calendário
+UC_Clube_GerenciarParticipacao .> UC_Calendario : <<include>>
+
+' 7) Agência: monitorar progresso também depende do calendário de eventos
+UC_MonitorarProgresso .> UC_Calendario : <<include>>
+
+@enduml
