@@ -1,0 +1,168 @@
+@startuml
+title Sistema Esportivo — Diagrama de Classes (com atributos; sem métodos)
+skinparam classAttributeIconSize 0
+
+' ======== Papéis e atores como classes de domínio ========
+abstract class Usuário {
+  +id: UUID
+  +nomeCompleto: String
+  +email: String
+  +telefone: String
+  +tipoPessoa: TipoPessoa           
+  +documento: String                
+  +endereco: String
+  +criadoEm: DateTime
+  +atualizadoEm: DateTime
+  +ativo: Boolean
+}
+
+class Atleta {
+  +esporte: String
+  +categoria: String                
+  +nacionalidade: String
+  +dataNascimento: Date
+  +ranking: Integer
+  +perfilPublico: Boolean
+  +bio: String
+}
+
+class Patrocinador {
+  +marca: String
+  +setor: String                    
+  +site: String
+}
+
+class RepAgencia {
+  +nomeAgencia: String
+  +areaAtuacao: String
+  +registroProfissional: String
+}
+
+class RepClube {
+  +cargo: String
+  +matricula: String
+  +dataAdmissao: Date
+}
+
+' Herança já definida
+Usuário <|-- Atleta
+Usuário <|-- Patrocinador
+Usuário <|-- RepAgencia
+Usuário <|-- RepClube
+
+' ======== Conteúdo & Publicações ========
+class Postagem {
+  +id: UUID
+  +tipo: TipoPostagem               
+  +urlMidia: String
+  +legenda: String
+  +dataPublicacao: DateTime
+  +visibilidade: Visibilidade       
+  +curtidas: Integer
+  +engajamento: Float               
+  +status: StatusPostagem           
+}
+
+' ======== Interações & Relatórios ========
+class RelatorioDesempenho {
+  +id: UUID
+  +periodoInicio: Date
+  +periodoFim: Date
+  +totalPostagens: Integer
+  +impressoes: Integer
+  +alcance: Integer
+  +engajamentos: Integer
+  +cliques: Integer
+  +conversoes: Integer
+  +roi: Decimal
+  +geradoEm: DateTime
+}
+
+' ======== Calendário & Eventos ========
+class Calendario {
+  +id: UUID
+  +nome: String
+  +descricao: String
+  +timezone: String
+  +ultimoSyncEm: DateTime
+}
+
+class EventoEsportivo {
+  +id: UUID
+  +titulo: String
+  +categoria: String                
+  +local: String
+  +inicio: DateTime
+  +fim: DateTime
+  +organizador: String
+  +status: StatusEvento             
+}
+
+' ======== Patrocínios & Contratos ========
+class Patrocinio {
+  +id: UUID
+  +dataInicio: Date
+  +dataFim: Date
+  +valorTotal: Decimal
+  +moeda: String
+  +status: StatusPatrocinio         
+  +tipo: String                     
+  +kpis: String                     
+  +objetivos: String
+}
+
+class ContratoPatrocinio {
+  +id: UUID
+  +numero: String
+  +dataAssinatura: Date
+  +vigenciaInicio: Date
+  +vigenciaFim: Date
+  +multaRescisoria: Decimal
+  +arquivoURL: String
+  +status: StatusContrato           
+}
+
+' ======== Monitoramento ========
+class MonitoramentoProgresso {
+  +id: UUID
+  +periodoInicio: Date
+  +periodoFim: Date
+  +metricas: String                 
+  +notaCondicao: Float
+  +observacoes: String
+  +criadoEm: DateTime
+}
+
+' ======== Clube ========
+class ClubeEsportivo {
+  +id: UUID
+  +nome: String
+  +cnpj: String
+  +sede: String
+  +site: String
+  +contatoEmail: String
+  +contatoTelefone: String
+  +fundacao: Date
+}
+
+' ======== Relações previamente definidas (mantidas) ========
+ClubeEsportivo "1" <-- "1..*" RepClube : trabalha em
+Patrocinador "1" -- "0..*" Patrocinio
+Atleta       "1" -- "0..*" Patrocinio
+Patrocinador "0..*" -- "0..*" Postagem : visualiza
+ClubeEsportivo "1" -- "0..*" Atleta : compõe elenco
+Atleta "0..*" -- "0..*" EventoEsportivo : participa
+Calendario "1" -- "0..*" EventoEsportivo : organiza/agenda
+
+' ======== Complementações anteriores (mantidas) ========
+Atleta "1" -- "0..*" Postagem : realiza
+Patrocinio "1" -- "1" ContratoPatrocinio : é regido por
+RepClube "0..*" -- "0..*" Atleta : gerencia participação
+RepClube "0..*" -- "0..*" EventoEsportivo : gerencia participação
+Atleta "0..*" -- "1" Calendario : visualiza
+RepAgencia "0..*" -- "0..*" ContratoPatrocinio : intermedia
+RepClube   "0..*" -- "0..*" MonitoramentoProgresso : monitora
+RepAgencia "0..*" -- "0..*" MonitoramentoProgresso : monitora
+Patrocinador "0..*" -- "0..*" RelatorioDesempenho : acessa
+
+@enduml
