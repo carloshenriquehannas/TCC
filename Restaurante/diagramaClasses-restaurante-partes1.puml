@@ -1,5 +1,5 @@
-@startuml
-title Sistema de Restaurante — Diagrama de Classes (complementado pelos Componentes - Partes 1)
+@startuml diagramaClasses - restaurante - partes1
+title Sistema de Restaurante — Diagrama de Classes
 
 skinparam classAttributeIconSize 0
 

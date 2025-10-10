@@ -1,4 +1,6 @@
-@startuml
+@startuml casoUso-biblioteca
+title Sistema Biblioteca — Casos de Uso
+
 actor "Usuário do Sistema" as UsuarioDoSistema
 actor "Membro da comunidade USP" as MembroDaComunidadeUSP
 actor "Bibliotecário" as Bibliotecario

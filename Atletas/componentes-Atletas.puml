@@ -1,5 +1,5 @@
-@startuml
-title Sistema Esportivo — Diagrama de Componentes (versão condensada)
+@startuml componentes - atletas
+title Sistema Esportivo — Diagrama de Componentes
 skinparam componentStyle rectangle
 skinparam actorStyle awesome
 

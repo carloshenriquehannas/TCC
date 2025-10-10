@@ -1,4 +1,6 @@
-@startuml
+@startuml componentes-biblioteca
+title Sistema Biblioteca — Diagrama de Componentes
+
 ' Atores
 actor "Usuário do Sistema" as UsuarioDoSistema
 actor "Membro da comunidade USP" as MembroDaComunidadeUSP

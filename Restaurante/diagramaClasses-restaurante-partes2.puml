@@ -1,4 +1,4 @@
-@startuml
+@startuml diagramaClasses - restaurante - partes2
 title Sistema de Restaurante — Modelo de Classes (a partir das user stories)
 hide circle
 skinparam classAttributeIconSize 0
