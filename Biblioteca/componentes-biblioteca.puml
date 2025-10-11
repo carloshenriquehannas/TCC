@@ -14,26 +14,25 @@ Bibliotecario --|> UsuarioDoSistema
 Administrador --|> UsuarioDoSistema
 
 ' Componentes
-component "gestão de reserva"
-component "gestão de usuários"
-component "gestão de equipamentos"
-component "gestão de salas"
-component "monitoramento do sistema"
-component "monitoramento & logs"
+component "gestão de reserva" as CGR
+component "gestão de usuários" as CGU
+component "gestão de equipamentos" as CGE
+component "gestão de salas" as CGS
+component "monitoramento do sistema" as CGMS
+component "monitoramento & logs" as CGML
 
-' Relações ator–componente (mesma semântica e sintaxe dos casos de uso)
-MembroDaComunidadeUSP --> "gestão de usuários"
-MembroDaComunidadeUSP --> "gestão de salas"
-MembroDaComunidadeUSP --> "gestão de equipamentos"
-MembroDaComunidadeUSP --> "gestão de reserva"
+MembroDaComunidadeUSP --> CGU
+MembroDaComunidadeUSP --> CGS
+MembroDaComunidadeUSP --> CGE
+MembroDaComunidadeUSP --> CGR
 
-Bibliotecario --> "gestão de salas"
-Bibliotecario --> "gestão de equipamentos"
-Bibliotecario --> "gestão de reserva"
+Bibliotecario --> CGS
+Bibliotecario --> CGE
+Bibliotecario --> CGR
 
-Administrador --> "gestão de usuários"
-Administrador --> "monitoramento do sistema"
+Administrador --> CGU
+Administrador --> CGMS
 
-Sistema --> "gestão de reserva"
-Sistema --> "monitoramento & logs"
+Sistema --> CGR
+Sistema --> CGML
 @enduml

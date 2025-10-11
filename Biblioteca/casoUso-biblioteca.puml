@@ -1,5 +1,6 @@
 @startuml casoUso-biblioteca
 title Sistema Biblioteca — Casos de Uso
+left to right direction 
 
 actor "Usuário do Sistema" as UsuarioDoSistema
 actor "Membro da comunidade USP" as MembroDaComunidadeUSP
@@ -30,12 +31,14 @@ MembroDaComunidadeUSP --> UC_ConsultarSalasEquip
 MembroDaComunidadeUSP --> UC_GerenciarReserva
 
 ' Casos de uso relacionados à reserva (extend partindo de "Gerenciar Reserva")
-UC_GerenciarReserva ..> UC_VerificarDisponibilidade : <<extend>>
+
+UC_GerenciarReserva ..> UC_ReceberNotificacoes : <<extend>>
 UC_GerenciarReserva ..> UC_FiltrarSalas : <<extend>>
+UC_GerenciarReserva ..> UC_VerificarDisponibilidade : <<extend>>
 UC_GerenciarReserva ..> UC_ReservarSala : <<extend>>
 UC_GerenciarReserva ..> UC_CancelarReserva : <<extend>>
 UC_GerenciarReserva ..> UC_ConvidarPessoas : <<extend>>
-UC_GerenciarReserva ..> UC_ReceberNotificacoes : <<extend>>
+
 
 ' Casos de uso do Administrador
 usecase "Gerenciar Perfis de Usuários" as UC_Admin_GerenciarPerfis
