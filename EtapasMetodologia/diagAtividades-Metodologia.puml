@@ -19,9 +19,9 @@ end note
 note right
 Aplicação das diretrizes em 4 sistemas, para geração de diagramas por meio de LLM.
 end note
-:Etapa 5: Análise de similaridade entre diagramas;
+:Etapa 5: Avaliação e análise de similaridade entre diagramas;
 note right
-Similaridade de diagramas gerados por LLM com base em projetos de graduação.
+Similaridade dos diagramas do LLM baseado em projetos de graduação.
 end note
 stop
 @enduml
