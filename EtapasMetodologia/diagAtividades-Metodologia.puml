@@ -1,0 +1,27 @@
+@startuml diagAtividades - etapas
+<style>
+activityDiagram {
+  activity {
+    RoundCorner 0
+  }
+}
+</style>
+skinparam Shadowing false
+
+start
+:Etapa 1: Estudo do subprocesso de análise e projeto;
+:Etapa 2: Exploração das diretrizes do LLM;
+note right
+Testes de prompt em um sistema de software para avaliar as diretrizes do LLM.
+end note
+:Etapa 3: Formalização das diretrizes;
+:Etapa 4: Avaliação das diretrizes;
+note right
+Aplicação das diretrizes em 4 sistemas, para geração de diagramas por meio de LLM.
+end note
+:Etapa 5: Análise de similaridade entre diagramas;
+note right
+Similaridade de diagramas gerados por LLM com base em projetos de graduação.
+end note
+stop
+@enduml
