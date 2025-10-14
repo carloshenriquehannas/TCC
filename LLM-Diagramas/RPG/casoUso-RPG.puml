@@ -1,4 +1,6 @@
-@startuml
+@startuml casoUso-rpg
+title RPG — Casos de Uso
+
 ' Forçar layout vertical
 top to bottom direction
 skinparam linetype ortho
