@@ -1,0 +1,235 @@
+@startuml diagramaClasses - rpg
+title RPG — Diagrama de Classes
+' Forçar layout vertical
+top to bottom direction
+'skinparam linetype ortho
+
+' --- Classes (atores e funcionalidades) ---
+class Jogador {
+  id: String
+  nickname: String
+  data_criacao: DateTime
+  nivel_conta: Int
+  xp_total: Int
+  moeda_ouro: Int
+  status_conta: String  ' ativo, suspenso, banido
+}
+
+class JogadorIniciante {
+  id: String
+  data_criacao_personagem: DateTime
+  tutorial_concluido: Bool
+}
+
+class JogadorExperiente {
+  id: String
+  nivel_personagem: Int
+  elo_mmr: Int
+  preferencia_dificuldade: String  ' Easy/Normal/Hard/Nightmare
+  total_missoes_hard_concluidas: Int
+}
+
+class Desenvolvedor {
+  id: String
+  nome: String
+  email: String
+  cargo: String
+  permissao_cheats: Bool
+}
+
+class Moderador {
+  id: String
+  nome: String
+  email: String
+  turno: String        ' ex.: diurno/noturno
+  nivel_permissao: Int
+}
+
+class Tutorial {
+  id: String
+  titulo: String
+  versao: String
+  duracao_min: Int
+  obrigatorio: Bool
+}
+
+class GuiaRapidoPopups {
+  id: String
+  titulo: String
+  idioma: String
+  versao: String
+  exibicao_contextual: Bool
+}
+
+class DicasCarregamento {
+  id: String
+  texto: String
+  idioma: String
+  prioridade: Int
+  ativo: Bool
+}
+
+class ColetaItens {
+  id: String
+  data_hora: DateTime
+  mapa: String
+  regiao: String
+  quantidade: Int
+  origem: String     ' drop, missao, crafting
+}
+
+class MissoesDesafiadoras {
+  id: String
+  nome: String
+  nivel_recomendado: Int
+  status: String         ' ativa, desbloqueada, concluida
+  recompensa_xp: Int
+  recompensa_moeda: Int
+}
+
+class AjusteDificuldade {
+  id: String
+  data_hora: DateTime
+  modo_anterior: String
+  modo_novo: String
+  escopo: String         ' global, partida
+  motivo: String
+}
+
+class RankingsEstatisticas {
+  id: String
+  posicao_global: Int
+  kda: Float
+  vitorias: Int
+  derrotas: Int
+  taxa_vitoria: Float
+  ultima_atualizacao: DateTime
+}
+
+class EventosCompeticoesRanqueadas {
+  id: String
+  nome_evento: String
+  tipo: String           ' solo, duo, time
+  data_inicio: DateTime
+  data_fim: DateTime
+  classificacao_final: Int
+  pontos_ranking: Int
+}
+
+class LoadsAnteriores {
+  id: String
+  nome_save: String
+  data_hora: DateTime
+  progresso_pct: Float
+  slot: Int
+  hash_integridade: String
+}
+
+class DesbloqueioNovasHabilidades {
+  id: String
+  data_hora: DateTime
+  habilidade_nome: String
+  nivel_desbloqueado: Int
+  origem: String         ' missao, evento, progresso
+}
+
+class RevisaoLogs {
+  id: String
+  data_hora: DateTime
+  periodo_inicio: DateTime
+  periodo_fim: DateTime
+  severidade_maxima: String
+  resumo: String
+}
+
+class FeedbackTempoRealBugs {
+  id: String
+  titulo: String
+  severidade: String      ' baixa, media, alta, critica
+  data_hora: DateTime
+  status: String          ' aberto, em_tratamento, corrigido
+  descricao: String
+}
+
+class AtualizacoesAutomaticas {
+  id: String
+  versao: String
+  data_distribuicao: DateTime
+  tamanho_mb: Float
+  status: String          ' pendente, em_andamento, concluida
+  notas_versao: String
+}
+
+class CheatsAcesso {
+  id: String
+  nome_cheat: String
+  data_hora: DateTime
+  escopo: String          ' local, servidor
+  motivo: String
+}
+
+class DadosUsoSistema {
+  id: String
+  metrica: String         ' ex.: usuarios_ativos, fps_medio
+  valor: Float
+  janela: String          ' ex.: 1m, 1h, 24h
+  origem: String          ' cliente, servidor
+  coletado_em: DateTime
+}
+
+class Item {
+  id: String
+  nome: String
+  raridade: String        ' comum, raro, epico, lendario
+  tipo: String            ' arma, armadura, consumo, material
+  nivel_requerido: Int
+  empilhavel: Bool
+  durabilidade_atual: Int
+}
+
+class Habilidade {
+  id: String
+  nome: String
+  tipo: String            ' ativa, passiva
+  custo_mana: Int
+  cooldown_s: Float
+  nivel_requerido: Int
+}
+
+' --- Heranças (conforme casos de uso) ---
+JogadorIniciante --|> Jogador
+JogadorExperiente --|> Jogador
+
+' --- Relações — Jogador Iniciante ---
+JogadorIniciante "1" -- "0..*" Tutorial          : assiste >
+JogadorIniciante "1" -- "0..*" DicasCarregamento : recebe >
+JogadorIniciante "1" -- "0..*" GuiaRapidoPopups  : acessa  >
+JogadorIniciante "1" -- "0..*" ColetaItens       : executa >
+ColetaItens "1" -- "1" Item                      : coleta >
+JogadorIniciante "1" -- "0..*" Item              : possui >
+
+' --- Relações — Jogador Experiente ---
+JogadorExperiente "1" -- "0..*" MissoesDesafiadoras          : realiza   >
+JogadorExperiente "1" -- "0..*" AjusteDificuldade            : configura >
+JogadorExperiente "1" -- "0..*" RankingsEstatisticas         : consulta  >
+JogadorExperiente "1" -- "0..*" EventosCompeticoesRanqueadas : participa >
+JogadorExperiente "1" -- "0..*" LoadsAnteriores              : acessa    >
+JogadorExperiente "1" -- "0..*" ColetaItens                   : executa   >
+JogadorExperiente "1" -- "0..*" Item                          : possui    >
+JogadorExperiente "0..*" -- "0..*" Habilidade                 : escolhe   >
+
+' Desbloqueios decorrentes de missões
+MissoesDesafiadoras "1" -- "0..*" DesbloqueioNovasHabilidades : desencadeia >
+
+' --- Relações — Moderador ---
+Moderador "0..*" -- "0..*" Jogador : monitora >
+Moderador "1" -- "0..*" RevisaoLogs : revisa   >
+RevisaoLogs "0..*" -- "0..*" DadosUsoSistema : consulta >
+
+' --- Relações — Desenvolvedor ---
+Desenvolvedor "1" -- "0..*" FeedbackTempoRealBugs   : recebe >
+Desenvolvedor "1" -- "0..*" AtualizacoesAutomaticas : implementa >
+Desenvolvedor "1" -- "0..*" CheatsAcesso            : utiliza >
+Desenvolvedor "1" -- "0..*" DadosUsoSistema         : consulta >
+
+@enduml
