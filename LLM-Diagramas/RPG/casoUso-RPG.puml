@@ -1,0 +1,81 @@
+@startuml
+' Forçar layout vertical
+top to bottom direction
+skinparam linetype ortho
+
+title Diagrama de Casos de Uso — Jogador Iniciante
+
+' Atores
+actor Jogador
+actor "Jogador Iniciante" as JogadorIniciante
+actor "Jogador Experiente" as JogadorExperiente
+actor Desenvolvedor
+actor Moderador
+
+' Herança
+JogadorIniciante --|> Jogador
+JogadorExperiente --|> Jogador
+
+' Casos de uso (apenas do Jogador Iniciante)
+usecase "Realizar Tutorial" as UC_Tutorial
+usecase "Receber Introdução à Narrativa" as UC_Narrativa
+usecase "Acessar Guia Rápido/\nPop-ups da Interface" as UC_Guia
+usecase "Repetir Tutorial" as UC_RepetirTutorial
+usecase "Receber Dicas nas Telas de Carregamento" as UC_Dicas
+
+' Associações — Jogador Iniciante
+JogadorIniciante --> UC_Tutorial
+JogadorIniciante --> UC_Narrativa
+JogadorIniciante --> UC_Guia
+JogadorIniciante --> UC_RepetirTutorial
+JogadorIniciante --> UC_Dicas
+
+' Casos de uso (apenas do Moderador) — atualizado
+usecase "Monitorar Jogadores" as UC_Mod_Monitorar
+usecase "Revisar Logs de Conversas e Atividades" as UC_Mod_RevisarLogs
+
+' Associações — Moderador
+Moderador --> UC_Mod_Monitorar
+Moderador --> UC_Mod_RevisarLogs
+
+' Casos de uso (apenas do Desenvolvedor)
+usecase "Receber Feedback em Tempo Real sobre Bugs Reportados" as UC_Dev_FeedbackTempoReal
+usecase "Implementar Atualizações Automáticas" as UC_Dev_AtualizacoesAuto
+usecase "Acessar Cheats para Explorar Fases e Encontrar Erros" as UC_Dev_Cheats
+usecase "Acessar Dados de Uso do Sistema" as UC_Dev_DadosUso
+
+' Associações — Desenvolvedor
+Desenvolvedor --> UC_Dev_FeedbackTempoReal
+Desenvolvedor --> UC_Dev_AtualizacoesAuto
+Desenvolvedor --> UC_Dev_Cheats
+Desenvolvedor --> UC_Dev_DadosUso
+
+' Inclusão obrigatória: Moderador ao revisar logs deve acessar dados de uso
+UC_Mod_RevisarLogs ..> UC_Dev_DadosUso : <<include>>
+
+' Casos de uso (apenas do Jogador Experiente)
+usecase "Desbloquear Missões Desafiadoras\ndesde o Início" as UC_Exp_Desafios
+usecase "Ajustar Dificuldade Manualmente" as UC_Exp_AjustarDificuldade
+usecase "Acessar Rankings e Estatísticas Detalhadas" as UC_Exp_Rankings
+usecase "Participar de Eventos e Competições Ranqueadas" as UC_Exp_Eventos
+usecase "Acessar Loads Anteriores do Jogo" as UC_Exp_Loads
+
+' Associações — Jogador Experiente
+JogadorExperiente --> UC_Exp_Desafios
+JogadorExperiente --> UC_Exp_AjustarDificuldade
+JogadorExperiente --> UC_Exp_Rankings
+JogadorExperiente --> UC_Exp_Eventos
+JogadorExperiente --> UC_Exp_Loads
+
+' Casos de uso comuns a Iniciante e Experiente
+usecase "Coletar Itens" as UC_Jog_Coletar
+usecase "Usar Habilidades" as UC_Jog_UsarHab
+JogadorIniciante --> UC_Jog_Coletar
+JogadorIniciante --> UC_Jog_UsarHab
+JogadorExperiente --> UC_Jog_Coletar
+JogadorExperiente --> UC_Jog_UsarHab
+
+' Correção do extend: o desbloqueio ocorre APÓS as missões desafiadoras
+usecase "Desbloquear Novas Habilidades" as UC_Exp_DesbloquearHab
+UC_Exp_Desafios ..> UC_Exp_DesbloquearHab : <<extend>>
+@enduml
