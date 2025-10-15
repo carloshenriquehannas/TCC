@@ -1,0 +1,131 @@
+@startuml
+title SmartMed - Casos de Uso
+
+left to right direction
+skinparam linetype ortho
+
+' =========================
+' Atores
+' =========================
+actor "Usuário do Sistema" as UsuarioDoSistema
+actor "Funcionário" as Funcionario
+actor "Paciente" as Paciente
+actor "Operador" as Operador
+actor "Médico" as Medico
+actor "Técnico" as Tecnico
+actor "Acompanhante" as Acompanhante
+actor "Administrador" as Administrador
+actor "Sistema" as Sistema
+
+' Heranças (seguindo um hospital real)
+Funcionario --|> UsuarioDoSistema
+Paciente --|> UsuarioDoSistema
+Acompanhante --|> UsuarioDoSistema
+Operador --|> Funcionario
+Medico --|> Funcionario
+Tecnico --|> Funcionario
+Administrador --|> Funcionario
+
+' =========================
+' Casos de uso — nomes precisos e condensados
+' =========================
+' Notificações/lembretes (consolida UC1, UC4, UC7)
+usecase "Lembretes e alertas de medicação" as UC_Notifs
+
+' Status e monitoramento
+usecase "Consultar status de medicamentos" as UC_Status        
+usecase "Monitorar consumo em tempo real" as UC_Monitor        
+usecase "Detectar irregularidades de adesão" as UC_Irregs      
+
+' Armazenamento e reabastecimento (consolida UC3, UC9)
+usecase "Armazenamento controlado e recarga" as UC_Storage
+
+' Configurações (consolida UC5, UC11)
+usecase "Configurar sistema e app" as UC_Config
+
+' Baixo estoque / reabastecimento
+usecase "Alerta de baixo estoque" as UC_LowStock               
+' Histórico e prescrição
+usecase "Histórico e prescrição" as UC_HistoryRx               
+
+' Requisitos não-funcionais / plataforma
+usecase "Disponibilidade 24x7 (manut. <= 2h/sem)" as UC_Avail  
+usecase "Precisão de sensores (+/- 2%)" as UC_Sensors          
+usecase "Compatibilidade Android/iOS" as UC_Mobile             
+usecase "Autenticar usuário (login/senha)" as UC_Auth          
+usecase "Integração com sistemas hospitalares" as UC_Integr   
+usecase "Usabilidade para 60+" as UC_UXSenior                  
+usecase "Conformidade LGPD" as UC_LGPD                        
+usecase "Acessibilidade digital" as UC_A11y                   
+
+' =========================
+' Associações ator–caso de uso
+' =========================
+' Lembretes e alertas de medicação
+Sistema -- UC_Notifs
+Paciente -- UC_Notifs
+UsuarioDoSistema -- UC_Notifs
+
+' Status / monitoramento / irregularidades
+Paciente -- UC_Status
+Medico -- UC_Monitor
+Acompanhante -- UC_Monitor
+Paciente -- UC_Monitor
+Sistema -- UC_Irregs
+Paciente -- UC_Irregs
+Medico -- UC_Irregs
+Acompanhante -- UC_Irregs
+Administrador -- UC_Irregs
+
+' Armazenamento e recarga
+Sistema -- UC_Storage
+
+' Configurações
+Administrador -- UC_Config
+Paciente -- UC_Config
+Acompanhante -- UC_Config
+Medico -- UC_Config
+
+' Baixo estoque
+Sistema -- UC_LowStock
+Administrador -- UC_LowStock
+Acompanhante -- UC_LowStock
+
+' Histórico e prescrição
+Sistema -- UC_HistoryRx
+Medico -- UC_HistoryRx
+Paciente -- UC_HistoryRx
+
+' Disponibilidade / manutenção
+Sistema -- UC_Avail
+Administrador -- UC_Avail
+
+' Sensores
+Sistema -- UC_Sensors
+Tecnico -- UC_Sensors
+
+' Compatibilidade do app
+Sistema -- UC_Mobile
+UsuarioDoSistema -- UC_Mobile
+
+' Autenticação
+UsuarioDoSistema -- UC_Auth
+Sistema -- UC_Auth
+
+' Integrações
+Administrador -- UC_Integr
+Sistema -- UC_Integr
+
+' UX sênior
+Sistema -- UC_UXSenior
+UsuarioDoSistema -- UC_UXSenior
+
+' LGPD
+Sistema -- UC_LGPD
+Administrador -- UC_LGPD
+
+' Acessibilidade
+Sistema -- UC_A11y
+UsuarioDoSistema -- UC_A11y
+
+@enduml
