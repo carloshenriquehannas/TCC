@@ -1,0 +1,164 @@
+@startuml diagramaClasses-smartmed
+title SmartMed — Diagrama de Classes 
+'left to right direction
+'skinparam linetype ortho
+
+' =========================
+' Atores (como classes)
+' =========================
+class "Usuário do Sistema" as UsuarioDoSistema {
+  usuarioId: String
+  nome: String
+  email: String
+}
+class "Funcionário" as Funcionario {
+  matricula: String
+  departamento: String
+  cargo: String
+}
+class "Paciente" as Paciente {
+  prontuarioId: String
+  dataNascimento: Date
+  sexoBiologico: String
+}
+class "Operador" as Operador {
+  turno: String
+  ativo: Boolean
+  certificacoes: String
+}
+class "Médico" as Medico {
+  crm: String
+  especialidade: String
+  turno: String
+}
+class "Técnico" as Tecnico {
+  registroProfissional: String
+  especialidadeTecnica: String
+  turno: String
+}
+class "Acompanhante" as Acompanhante {
+  nome: String
+  parentesco: String
+  contato: String
+}
+class "Administrador" as Administrador {
+  nivelAcesso: String
+  areaResponsavel: String
+  ativo: Boolean
+}
+class "Sistema" as Sistema {
+  sistemaId: String
+  versao: String
+  ambiente: String
+}
+
+' =========================
+' Serviços / Domínio (dos componentes)
+' =========================
+class "Integração & Interoperabilidade" as IntegracaoInteroperabilidade {
+  padroesSuportados: String
+  endpointsAtivos: Int
+  brokerEventos: String
+}
+class "Identidade & Acesso (IAM)" as IdentidadeAcessoIAM {
+  provedor: String
+  mfaHabilitado: Boolean
+  politicasSenhaNivel: String
+}
+class "Notificação" as Notificacao {
+  canaisSuportados: String
+  quietHours: String
+  taxaMaxPorHora: Int
+}
+class "Telemetria & Analítica de Adesão" as TelemetriaAnaliticaAdesao {
+  janelaAmostragemMin: Int
+  retencaoDias: Int
+  modeloDeteccao: String
+}
+class "Dispensação & Estoque" as DispensacaoEstoque {
+  capacidadeDoses: Int
+  nivelMinimoAlerta: Int
+  statusDispositivo: String
+}
+class "Prontuário & Prescrição" as ProntuarioPrescricao {
+  numeroProntuario: String
+  ultimaAtualizacao: DateTime
+  origemPrescricao: String
+}
+class "Segurança, Privacidade & Compliance" as SegurancaPrivacidadeCompliance {
+  criptografiaEmRepouso: Boolean
+  nivelConformidade: String
+  auditoriaAtiva: Boolean
+}
+class "Administração, Operações & Observabilidade" as AdministracaoOperacoesObservabilidade {
+  slaAlvoPct: Float
+  janelaManutencaoSemanal: String
+  statusOperacional: String
+}
+
+' =========================
+' Nova classe solicitada
+' =========================
+class "Medicamento" as Medicamento {
+  codigoAnvisa: String
+  nome: String
+  formaFarmaceutica: String
+}
+
+' =========================
+' Heranças (mantidas)
+' =========================
+Funcionario --|> UsuarioDoSistema
+Paciente --|> UsuarioDoSistema
+Acompanhante --|> UsuarioDoSistema
+Operador --|> Funcionario
+Medico --|> Funcionario
+Tecnico --|> Funcionario
+Administrador --|> Funcionario
+
+' =========================
+' Composições / Agregações principais
+' =========================
+Paciente "1" *-- "1" ProntuarioPrescricao : possui
+ProntuarioPrescricao "1" o-- "0..*" Medicamento : inclui
+IdentidadeAcessoIAM "1" o-- "0..*" UsuarioDoSistema : gerencia identidades
+DispensacaoEstoque "1" o-- "0..*" Medicamento : mantém estoque
+
+' =========================
+' Associações de domínio (com multiplicidades)
+' =========================
+Paciente "0..*" -- "0..*" Medicamento : toma/é prescrito
+Tecnico "0..*" -- "0..*" DispensacaoEstoque : mantém/instala
+Operador "0..*" -- "0..*" DispensacaoEstoque : opera
+Paciente "0..*" -- "0..*" DispensacaoEstoque : recebe dispensação
+Medico "0..*" -- "0..*" ProntuarioPrescricao : prescreve/consulta
+Acompanhante "0..*" -- "0..*" Paciente : acompanha
+
+' Notificações para usuários
+Notificacao "1" -- "0..*" UsuarioDoSistema : envia/entrega
+
+' Telemetria e observabilidade
+TelemetriaAnaliticaAdesao "1" -- "0..*" Paciente : monitora adesão
+AdministracaoOperacoesObservabilidade "1" -- "0..*" DispensacaoEstoque : observa/gera métricas
+
+' Integração entre serviços (associações/dependências)
+IntegracaoInteroperabilidade "1" -- "0..*" ProntuarioPrescricao
+IntegracaoInteroperabilidade "1" -- "0..*" DispensacaoEstoque
+IntegracaoInteroperabilidade "1" -- "0..*" TelemetriaAnaliticaAdesao
+
+' =========================
+' Dependências entre serviços (fluxos/uso)
+' =========================
+TelemetriaAnaliticaAdesao ..> Notificacao : gera alertas
+DispensacaoEstoque ..> TelemetriaAnaliticaAdesao : envia eventos
+ProntuarioPrescricao ..> Notificacao : agenda lembretes
+SegurancaPrivacidadeCompliance ..> IdentidadeAcessoIAM : políticas/autorizações
+
+' =========================
+' Restrições do "Sistema" (apenas com integração, segurança e notificação)
+' =========================
+Sistema "1" -- "1" IntegracaoInteroperabilidade
+Sistema "1" -- "1" SegurancaPrivacidadeCompliance
+Sistema "1" -- "1" Notificacao
+
+@enduml
