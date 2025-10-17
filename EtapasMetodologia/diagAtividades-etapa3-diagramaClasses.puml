@@ -1,0 +1,14 @@
+@startuml
+skinparam linetype ortho
+skinparam shadowing false
+skinparam monochrome true
+
+start
+
+:Prompt para implementar apenas as classes em código PUML:\n"Implemente apenas classes no código PUML de diagrama de classes,\nsem multiplicidades, relações, atributos e métodos. Faça a implementação\nbaseado no código de casos de uso. Código: <código do casos de uso>";
+:Prompt para implementar apenas as heranças entre classes:\n"No código anterior, implemente apenas as relações de heranças\nque ocorrem entre as classes, considerando a semântica de casos de uso";
+:Prompt para implementar apenas os relacionamentos e multiplicidades:\n"No código anterior, um representante de clube trabalha em um clube esportivo.\nUm patrocinador visualiza nenhuma ou várias postagens de um atleta.\nVários atletas...";
+:Prompt para implementar apenas os atributos de cada classe, considerando características reais:\n"Implemente no código anterior apenas os atributos de cada classe, considerando características reais da classe;
+
+stop
+@enduml

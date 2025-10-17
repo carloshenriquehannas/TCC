@@ -1,0 +1,24 @@
+@startuml
+skinparam linetype ortho
+skinparam shadowing false
+skinparam monochrome true
+
+start
+
+:Coleta de todas as HUs do sistema;
+:Prompt para implementar os atores e suas heranças no sistema, a partir de todas HUs:\n"Gere um código PUML de casos de uso implementando apenas atores, com as\nrelações de herança se houver, considerando as seguintes HUs: <lista de HUs>";
+
+' Loop: coerência das heranças
+while (Heranças coerentes com sistemas reais?) is (não)
+  :Prompt corretivo único para heranças:\n"Ator X herda do ator Y; Ator Z herda de ...";
+endwhile (sim)
+
+' Implementação dos casos de uso por ator
+while (Há atores sem casos de uso implementados?) is (sim)
+  :Prompt para implementar casos de uso de apenas um ator, baseado nas HUs dele:\n"No código PUML anterior implemente apenas os casos de uso do ator X, baseado\nestritamente nas seguintes HUs: <lista de HUs do ator X>";
+endwhile (não)
+
+:Prompt para refinar relações de casos de uso («include»/«extend»):\n "Caso de uso A ocorre apenas se B ocorrer; Caso de uso C pode ocorrer se ...";
+
+stop
+@enduml

@@ -1,4 +1,9 @@
 @startuml diagAtividades - etapas
+@startuml
+skinparam linetype ortho
+skinparam shadowing false
+skinparam monochrome true
+
 <style>
 activityDiagram {
   activity {

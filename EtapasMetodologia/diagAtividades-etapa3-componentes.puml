@@ -1,0 +1,22 @@
+@startuml
+skinparam linetype ortho
+skinparam shadowing false
+skinparam monochrome true
+
+start
+
+:Prompt para listar possíveis componentes (a partir do código PUML de casos de uso):\n"A partir do código PlantUML de casos de uso, liste os possíveis componentes\n(apenas nomes, sem código): <código final do caso de uso>";
+:Prompt para agrupar componentes semelhantes da lista anterior (meta: 6–9 componentes):\n"Agrupe componentes de alerta e lembretes em apenas um único componente de notificação.\nAgrupe demais componentes semelhantes e retorne a nova lista";
+:Prompt para gerar código PUML de componentes (baseado na listagem anterior):\n"Baseado da lista de componentes anterior e no código de casos de uso, gere um\ndiagrama de componentes em PUML contendo somente componentes e atores (sem relações)";
+:Prompt para implementar heranças entre atores no código PUML de componentes:\n"No código anterior implemente apenas as relações de heranças entre atores, conforme\nsemântica de casos de uso";
+
+while (Semântica mantida?) is (não)
+  :Prompt corretivo único para heranças:\n"Ator X herda de Y; Ator Z herda de ...";
+endwhile (sim)
+
+while (Há atores sem relações com componentes?) is (sim)
+    :Prompt para implementar relações de atores e componentes, baseado na semântica do caso de uso:\n"Implemente as relações entre atores e componentes no código PUML de componentes. As relações devem\nseguir exatamente a mesma semântica dos casos de uso";
+endwhile (não)
+
+stop
+@enduml
