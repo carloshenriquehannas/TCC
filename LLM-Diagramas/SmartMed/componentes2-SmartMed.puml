@@ -1,5 +1,5 @@
 @startuml componentes2-smartmed
-title SmartMed — Diagrama de Componentes (relacionamentos condensados)
+title SmartMed — Diagrama de Componentes
 
 left to right direction
 'skinparam linetype ortho
