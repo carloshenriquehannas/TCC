@@ -1,5 +1,4 @@
 @startuml diagAtividades-Metodologia
-!pragma useBetaStyle true
 skinparam linetype ortho
 skinparam shadowing false
 skinparam monochrome true
@@ -19,8 +18,8 @@ e1  --> "Etapa 2: Exploração das diretrizes do LLM"           as e2
 e2  --> "Etapa 3: Formalização das diretrizes"                as e3
 e3  --> "Etapa 4: Avaliação das diretrizes"                            as e4
 
-if Há novas diretrizes na etapa 4? then
-  -->[Sim]  e3
+if "Há novas diretrizes na etapa 4?" then
+  --> [Sim]  e3
 else
   -->[Não] "Etapa 5: Avaliação e análise de similaridade entre diagramas"          as e5                        
 endif
@@ -28,5 +27,6 @@ endif
 if "Há refinamentos na etapa 5?" then
   -->[Sim]  e3
 else
-  -->[Não](*)                        
+  -->[Não] (*)                        
 endif
+@enduml
