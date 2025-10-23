@@ -7,9 +7,9 @@ start
 
 :Prompt para implementar apenas as classes em código PUML:\n"Implemente apenas classes no código PUML de diagrama de classes,\nsem multiplicidades, relações, atributos e métodos. Faça a implementação\nbaseado no código de casos de uso. Código: <código do casos de uso>";
 while (Todas as classes foram geradas?) is (Não)
-    :Prompt corretivo único para gerar classe:\n"Gere a classe X";
+    :Prompt corretivo único para gerar classe:\n"Gere a classe X, mantendo a semântica\n do código de componentes: <código de componentes>";
 endwhile (Sim)
-:Prompt para implementar apenas as heranças entre classes:\n"No código anterior, implemente apenas as relações de heranças\nque ocorrem entre as classes, considerando a semântica de casos de uso";
+:Prompt para implementar apenas as heranças entre classes:\n"No código anterior, implemente apenas as relações de heranças\nque ocorrem entre as classes, considerando a semântica de casos de uso e componentes";
 while (Heranças estão coerentes?) is (Não)
     :Prompt corretivo único para gerar herança:\n"Classe Y herda características da classe Z";
 endwhile (Sim)
