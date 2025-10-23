@@ -1,5 +1,5 @@
 @startuml componentes2-smartmed
-title SmartMed — Diagrama de Componentes 
+title SmartMed — Diagrama de Componentes (relacionamentos condensados)
 
 left to right direction
 'skinparam linetype ortho
@@ -8,61 +8,44 @@ left to right direction
 ' Componentes
 ' =========================
 component "Notificação"                                   as C_Notificacao
-component "Adesão & Monitoramento"                       as C_AdesaoMonitoramento
-component "Medicamentos & Prescrição"                    as C_MedicamentosPrescricao
-component "Estoque & Armazenamento"                      as C_EstoqueArmazenamento
-component "Administração & Configuração"                 as C_AdminConfiguracao
-component "Sensores & Calibração"                        as C_SensoresCalibracao
-component "Segurança, Identidade & Conformidade"         as C_SegurancaIdentidadeConformidade
-component "Integração & Interoperabilidade"              as C_IntegracaoInteroperabilidade
-component "Confiabilidade & Observabilidade (Operações)" as C_ConfiabilidadeObservabilidade
+component "Adesão &\n Monitoramento"                       as C_AdesaoMonitoramento
+component "Medicamentos & \nPrescrição"                    as C_MedicamentosPrescricao
+component "Estoque &\n Armazenamento"                      as C_EstoqueArmazenamento
+component "Administração & \nConfiguração"                 as C_AdminConfiguracao
+component "Sensores & \nCalibração"                        as C_SensoresCalibracao
+component "Segurança, \nIdentidade & \nConformidade"         as C_SegurancaIdentidadeConformidade
+component "Integração & \nInteroperabilidade"              as C_IntegracaoInteroperabilidade
+component "Confiabilidade &\n Observabilidade" as C_ConfiabilidadeObservabilidade
 
 ' =========================
-' Relações (semântica dos casos de uso)
+' Relações (mantendo semântica; condensadas)
 ' =========================
 
-' 1) Fluxos funcionais principais (colaboração funcional → linha cheia)
+' 1) Fluxos funcionais principais (colaboração → linha cheia)
 C_SensoresCalibracao        --> C_AdesaoMonitoramento           : telemetria bruta
-C_AdesaoMonitoramento       --> C_MedicamentosPrescricao        : regras/posologia para análise de adesão
-C_EstoqueArmazenamento      --> C_MedicamentosPrescricao        : consumo previsto por prescrição
+C_AdesaoMonitoramento       --> C_MedicamentosPrescricao        : regras/posologia
+C_Notificacao               --> C_AdesaoMonitoramento           : irregularidades
+C_Notificacao               --> C_EstoqueArmazenamento          : baixo estoque
 
-C_Notificacao               --> C_AdesaoMonitoramento           : alertas de irregularidade (UC_Irregs)
-C_Notificacao               --> C_EstoqueArmazenamento          : alerta de baixo estoque (UC_LowStock)
-C_Notificacao               --> C_MedicamentosPrescricao        : mudança de prescrição/histórico (UC_HistoryRx)
+' 2) Administração/Configuração (negócio → linha cheia)
+C_AdminConfiguracao         --> C_AdesaoMonitoramento           : thresholds
+C_AdminConfiguracao         --> C_EstoqueArmazenamento          : níveis mínimos
+C_AdminConfiguracao         --> C_SensoresCalibracao            : calibração
 
-' 2) Administração/Configuração impacta domínios (configuração de negócio → linha cheia)
-C_AdminConfiguracao         --> C_AdesaoMonitoramento           : thresholds políticas de adesão (UC_Config)
-C_AdminConfiguracao         --> C_Notificacao                   : templates/canais (UC_Config)
-C_AdminConfiguracao         --> C_EstoqueArmazenamento          : níveis mínimos/recarga (UC_Config)
-C_AdminConfiguracao         --> C_SensoresCalibracao            : parâmetros de calibração (UC_Sensors)
-C_AdminConfiguracao         --> C_MedicamentosPrescricao        : protocolos/formulário (UC_Config)
+' 3) Integrações externas (dependência → seta tracejada)
+C_MedicamentosPrescricao    ..> C_IntegracaoInteroperabilidade  : Electronic Medical Record / Electronic Health Record
+C_EstoqueArmazenamento      ..> C_IntegracaoInteroperabilidade  : Enterprise Resource Planning
+C_AdminConfiguracao         ..> C_IntegracaoInteroperabilidade  : endpoints/chaves
 
-' 3) Integrações externas (uso de serviços externos → dependência → seta tracejada)
-C_MedicamentosPrescricao    ..> C_IntegracaoInteroperabilidade  : EMR/EHR (UC_Integr)
-C_AdesaoMonitoramento       ..> C_IntegracaoInteroperabilidade  : dados clínicos/telemetria (UC_Integr)
-C_EstoqueArmazenamento      ..> C_IntegracaoInteroperabilidade  : ERP/almoxarifado (UC_Integr)
-C_Notificacao               ..> C_IntegracaoInteroperabilidade  : SMS/Email/Push (UC_Notifs)
-
-' 4) Cross-cutting: Segurança/Identidade/LGPD (serviço transversal → dependência → seta tracejada)
-C_AdesaoMonitoramento       ..> C_SegurancaIdentidadeConformidade : autenticação/autorização (UC_Auth)
-C_MedicamentosPrescricao    ..> C_SegurancaIdentidadeConformidade : proteção de dados (UC_LGPD)
-C_EstoqueArmazenamento      ..> C_SegurancaIdentidadeConformidade : controle de acesso
-C_Notificacao               ..> C_SegurancaIdentidadeConformidade : consentimento/canônicos LGPD
+' 4) Cross-cutting: Segurança/Identidade/LGPD (dependência → seta tracejada)
+C_MedicamentosPrescricao    ..> C_SegurancaIdentidadeConformidade : Lei Geral de Proteção de Dados
 C_SensoresCalibracao        ..> C_SegurancaIdentidadeConformidade : identidade de dispositivo
-C_AdminConfiguracao         ..> C_SegurancaIdentidadeConformidade : auditoria/admin segura
-C_IntegracaoInteroperabilidade ..> C_SegurancaIdentidadeConformidade : contratos/DPAs/escopos
+C_IntegracaoInteroperabilidade ..> C_SegurancaIdentidadeConformidade : contratos/Data Processing Agreements
+C_AdminConfiguracao         ..> C_SegurancaIdentidadeConformidade : auditoria
 
-' 5) Operações: observabilidade/alta disponibilidade (plataforma/infra → dependência → seta tracejada)
-C_AdesaoMonitoramento       ..> C_ConfiabilidadeObservabilidade : métricas/logs/tracing (UC_Avail)
-C_MedicamentosPrescricao    ..> C_ConfiabilidadeObservabilidade : auditoria/histórico (UC_Avail)
-C_EstoqueArmazenamento      ..> C_ConfiabilidadeObservabilidade : saúde de jobs/filas (UC_Avail)
-C_Notificacao               ..> C_ConfiabilidadeObservabilidade : entrega/latência (UC_Avail)
-C_SensoresCalibracao        ..> C_ConfiabilidadeObservabilidade : telemetria de dispositivos (UC_Sensors)
-C_AdminConfiguracao         ..> C_ConfiabilidadeObservabilidade : mudanças/config drifts
-C_IntegracaoInteroperabilidade ..> C_ConfiabilidadeObservabilidade : integrações externas
-
-' Ajustes finos adicionais (também dependências)
-C_AdminConfiguracao         ..> C_IntegracaoInteroperabilidade  : endpoints/chaves/filas
-C_ConfiabilidadeObservabilidade ..> C_SegurancaIdentidadeConformidade : retenção/mascaração LGPD
+' 5) Operações/Observabilidade (dependência → seta tracejada)
+C_AdesaoMonitoramento       ..> C_ConfiabilidadeObservabilidade : métricas/logs
+C_Notificacao               ..> C_ConfiabilidadeObservabilidade : entrega/latência
+C_IntegracaoInteroperabilidade ..> C_ConfiabilidadeObservabilidade : integrações
 
 @enduml
