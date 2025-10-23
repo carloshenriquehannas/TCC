@@ -1,0 +1,57 @@
+@startuml componentes2 - atletas
+title Sistema Esportivo — Diagrama de Componentes
+left to right direction
+'skinparam componentStyle rectangle
+
+component "Perfis & Portfólio de Atletas" as PerfisPortfolio
+component "Conteúdo & Moderação" as ConteudoModeracao
+component "Comunicação (Mensageria & Feedback)" as Comunicacao
+component "Agenda & Participações" as AgendaParticipacoes
+component "Patrocínios & Contratos\n(inclui negociação)" as PatrociniosContratos
+component "Carreira & Desempenho" as CarreiraDesempenho
+component "Gestão de Clubes" as GestaoClubes
+component "Analytics (Relatórios / ROI)" as Analytics
+
+' ==========================
+' Dependências basais (dados de atleta)
+' ==========================
+ConteudoModeracao ..> PerfisPortfolio : Consulta perfil/portfólio\ndo atleta para publicar/aprovar
+Comunicacao ..> PerfisPortfolio : Contexto de remetente/destinatário\nvia perfis
+AgendaParticipacoes ..> PerfisPortfolio : Mapear atletas inscritos\nem eventos/competições
+PatrociniosContratos ..> PerfisPortfolio : Vínculo atleta–patrocinador\n(elegibilidade/escopo)
+CarreiraDesempenho ..> PerfisPortfolio : Dados do atleta para\nplanejamento de carreira
+GestaoClubes ..> PerfisPortfolio : Dados de atletas associados\nao clube
+
+' ==========================
+' Calendário incluído por monitoramento/participação (<<include>>)
+' ==========================
+CarreiraDesempenho ..> AgendaParticipacoes : <<include>> Calendário para\nmonitorar progresso
+GestaoClubes ..> AgendaParticipacoes : <<include>> Calendário para\ngerir participações
+
+' ==========================
+' Conteúdo & patrocínio (<<extend>> aprovação)
+' ==========================
+ConteudoModeracao ..> PatrociniosContratos : <<extend>> Aprovação de conteúdo\nno contexto de patrocínio
+
+' ==========================
+' Comunicação no contexto de contratos/negociações
+' (associação sem dependência ⇒ linha contínua)
+' ==========================
+Comunicacao --> PatrociniosContratos : Discussão de termos,\nfeedback e negociação
+
+' ==========================
+' Relatórios incluídos na gestão de patrocínios (<<include>>)
+' ==========================
+PatrociniosContratos ..> Analytics : <<include>> Relatórios/ROI\npara acompanhamento
+
+' ==========================
+' Clubes referenciam dados de patrocinadores
+' ==========================
+GestaoClubes ..> PatrociniosContratos : Detalhes de patrocinadores\ne vínculos de atletas
+
+' ==========================
+' Negociação como extensão da gestão de carreira/contratos (<<extend>>)
+' ==========================
+PatrociniosContratos ..> CarreiraDesempenho : <<extend>> Negociação de contrato\nno contexto da gestão de carreira
+
+@enduml

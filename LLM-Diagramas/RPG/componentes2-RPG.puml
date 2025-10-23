@@ -1,0 +1,51 @@
+@startuml componentes2-rpg
+title RPG — Diagrama de Componentes 
+
+left to right direction
+'skinparam componentStyle rectangle
+'skinparam linetype ortho
+
+' --- Componentes ---
+component "Onboarding & Ajuda In-Game" as OnboardingAjuda
+component "Progressão" as Progressao
+component "Ajuste de Dificuldade" as AjusteDificuldade
+component "Competição & Rankings" as CompeticaoRankings
+component "Persistência de Jogo (Saves/Loads)" as Persistencia
+component "Inventário & Coleta de Itens" as InventarioColeta
+component "Observabilidade\n(Telemetria, Logs, Auditoria)" as Observabilidade
+component "Moderação" as Moderacao
+component "Feedback de Bugs em Tempo Real" as FeedbackBugs
+component "Atualizações / Deployment" as Atualizacoes
+component "Ferramentas Internas (QA/Cheats)" as FerramentasInternas
+
+' --- Relações (com setas tracejadas quando houver dependência) ---
+Progressao ..> AjusteDificuldade : usa níveis/curvas
+CompeticaoRankings ..> AjusteDificuldade : usa níveis/curvas
+
+Progressao ..> Persistencia : salva/recupera progresso
+InventarioColeta ..> Persistencia : salva/recupera itens
+CompeticaoRankings ..> Persistencia : salva/consulta rankings
+
+Progressao ..> Observabilidade : emite métricas/eventos
+InventarioColeta ..> Observabilidade : emite métricas/eventos
+CompeticaoRankings ..> Observabilidade : emite métricas/eventos
+Persistencia ..> Observabilidade : emite logs/erros
+Moderacao ..> Observabilidade : consulta logs/dados de uso
+
+FeedbackBugs ..> Atualizacoes : reporta bugs
+Atualizacoes --> OnboardingAjuda : entrega conteúdo/patches
+Atualizacoes --> Progressao : deploy regras/desafios
+Atualizacoes --> AjusteDificuldade : deploy curvas/parâmetros
+Atualizacoes --> CompeticaoRankings : deploy eventos/regras
+Atualizacoes --> InventarioColeta : deploy itens/balanceamento
+Atualizacoes --> Observabilidade : deploy agentes/coleta
+Atualizacoes --> Persistencia : migrações/scripts
+
+FerramentasInternas ..> Progressao : warp/desbloqueios
+FerramentasInternas ..> Persistencia : força estados/snapshots
+
+' --- Correções solicitadas ---
+OnboardingAjuda ..> Persistencia : salva progresso/tutorial
+Observabilidade --> FeedbackBugs : alimenta alertas
+
+@enduml
