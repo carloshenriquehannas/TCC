@@ -6,7 +6,9 @@ Repositório destinado aos códigos **PlantUML (PUML)** utilizados no Trabalho d
 
 ## 📁 Estrutura do repositório
 ├── DescricaoAtividadesRealizadas/
+
 ├── DescricaoProjeto/
+
 └── README.md
 
 ### DescriçãoProjeto (Seção 3.2)
