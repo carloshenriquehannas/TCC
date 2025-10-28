@@ -17,6 +17,7 @@ A pasta **out** armazena a figura do diagrama de atividades do processo em exten
 
 ### DescriçãoAtividadesRealizadas (Seção 3.3)
 Esta pasta armazena as pastas de cada uma das etapas das atividades realizadas:
+
 ├── ExploracaoDiretrizes/
 
 ├── FormalizacaoDiretrizes/
