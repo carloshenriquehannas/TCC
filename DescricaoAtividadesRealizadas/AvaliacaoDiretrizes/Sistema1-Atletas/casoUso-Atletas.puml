@@ -1,7 +1,7 @@
 @startuml casos de uso - atletas
-title Sistema Esportivo — Casos de Uso
 
 left to right direction
+'top to bottom direction
 skinparam actorStyle awesome
 
 ' =======================

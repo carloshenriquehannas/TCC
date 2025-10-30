@@ -1,5 +1,4 @@
 @startuml diagramaClasses - rpg
-title RPG — Diagrama de Classes
 ' Forçar layout vertical
 top to bottom direction
 'skinparam linetype ortho

@@ -1,5 +1,4 @@
 @startuml diagramaClasses - biblioteca
-title Sistema Biblioteca — Diagrama de Classes
 
 ' Diagrama de Classes — acrescentada a classe Notificação (envio pelo Sistema aos usuários)
 

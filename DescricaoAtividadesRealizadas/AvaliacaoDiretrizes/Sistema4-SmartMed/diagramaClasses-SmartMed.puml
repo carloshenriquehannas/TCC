@@ -1,5 +1,4 @@
 @startuml diagramaClasses-smartmed
-title SmartMed — Diagrama de Classes 
 'left to right direction
 'skinparam linetype ortho
 

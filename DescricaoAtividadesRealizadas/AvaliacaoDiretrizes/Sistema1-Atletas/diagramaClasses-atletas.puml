@@ -1,5 +1,4 @@
 @startuml diagramaClasses - atletas
-title Sistema Esportivo — Diagrama de Classes
 skinparam classAttributeIconSize 0
 
 ' ======== Papéis e atores como classes de domínio ========

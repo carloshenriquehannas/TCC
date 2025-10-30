@@ -1,5 +1,4 @@
-@startuml componentes2-smartmed
-title SmartMed — Diagrama de Componentes
+@startuml componentes-smartmed
 
 left to right direction
 'skinparam linetype ortho

@@ -21,7 +21,7 @@ e3  --> "Etapa 4: Avaliação das diretrizes"                            as e4
 if "Há novas diretrizes na etapa 4?" then
   --> [Sim]  e3
 else
-  -->[Não] "Etapa 5: Avaliação e análise de similaridade entre diagramas"          as e5                        
+  -->[Não] "Etapa 5: Avaliação de diagramas"          as e5                        
 endif
 
 if "Há refinamentos na etapa 5?" then

@@ -1,5 +1,4 @@
 @startuml casoUso-biblioteca
-title Sistema Biblioteca — Casos de Uso
 left to right direction 
 
 actor "Usuário do Sistema" as UsuarioDoSistema

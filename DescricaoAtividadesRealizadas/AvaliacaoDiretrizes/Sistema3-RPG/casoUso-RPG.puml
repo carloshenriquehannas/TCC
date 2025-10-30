@@ -1,11 +1,9 @@
 @startuml casoUso-rpg
-title RPG — Casos de Uso
 
 ' Forçar layout horizontal (achatar)
 left to right direction
 skinparam linetype ortho
 
-title Diagrama de Casos de Uso — Jogador Iniciante
 
 ' Atores
 actor Jogador
