@@ -10,7 +10,7 @@ start
 :Prompt para implementar os atores e suas heranças no sistema, a partir de todas HUs:\n"Gere um código PUML de casos de uso implementando apenas atores, com as\nrelações de herança se houver, considerando as seguintes HUs: <lista de HUs>";
 
 while (Todos atores implementados?) is (Não)
-  :Prompt corretvo único para ator:\n"Implemente o ator W";
+  :Prompt corretivo único para ator:\n"Implemente o ator W";
 endwhile (Sim)
 
 ' Loop: coerência das heranças
