@@ -2,7 +2,20 @@
 
 skinparam linetype ortho
 skinparam shadowing false
-skinparam monochrome true
+'skinparam monochrome true
+
+skinparam activity {
+  BackgroundColor #FFFFFF                      
+  BorderColor      #0077b6                     
+  FontColor        #000000                     
+}
+
+skinparam ActivityStartColor #0077b6
+skinparam ActivityEndColor   #0077b6           
+skinparam ArrowColor         #0077b6  
+
+skinparam activityDiamondBackgroundColor #FFFFFF    
+skinparam activityDiamondBorderColor     #0077b6
 
 start
 
