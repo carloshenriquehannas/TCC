@@ -1,0 +1,88 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:145.0) Gecko/20100101 Firefox/145.0" version="29.0.3">
+  <diagram name="Página-1" id="GfLIFYmpzweEPO_3fw5z">
+    <mxGraphModel dx="1034" dy="592" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="9HZ5iPtXXh4kKHVZzlKG-1" value="" style="ellipse;html=1;shape=startState;fillColor=#90E0EF;strokeColor=#0077B6;" vertex="1" parent="1">
+          <mxGeometry x="10" y="325" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="9HZ5iPtXXh4kKHVZzlKG-2" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;verticalAlign=bottom;endArrow=open;endSize=8;strokeColor=#0077B6;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="9HZ5iPtXXh4kKHVZzlKG-1" parent="1" target="9HZ5iPtXXh4kKHVZzlKG-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="105" y="340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9HZ5iPtXXh4kKHVZzlKG-3" value="Etapa 1: Subprocesso de Análise e Projeto" style="rounded=1;whiteSpace=wrap;html=1;arcSize=40;fontColor=#000000;fillColor=#FFFFFF;strokeColor=#0077B6;" vertex="1" parent="1">
+          <mxGeometry x="60" y="320" width="130" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="9HZ5iPtXXh4kKHVZzlKG-4" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;verticalAlign=bottom;endArrow=open;endSize=8;strokeColor=#0077B6;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="9HZ5iPtXXh4kKHVZzlKG-3" parent="1" target="9HZ5iPtXXh4kKHVZzlKG-5">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="410" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9HZ5iPtXXh4kKHVZzlKG-5" value="Etapa 2: Exploração das Diretrizes do LLM" style="rounded=1;whiteSpace=wrap;html=1;arcSize=40;fontColor=#000000;fillColor=#FFFFFF;strokeColor=#0077B6;" vertex="1" parent="1">
+          <mxGeometry x="230" y="320" width="130" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="9HZ5iPtXXh4kKHVZzlKG-6" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;verticalAlign=bottom;endArrow=open;endSize=8;strokeColor=#0077B6;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" source="9HZ5iPtXXh4kKHVZzlKG-5" parent="1" target="9HZ5iPtXXh4kKHVZzlKG-7">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="400" y="490" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9HZ5iPtXXh4kKHVZzlKG-7" value="Etapa 3: Formalização das Diretrizes" style="rounded=1;whiteSpace=wrap;html=1;arcSize=40;fontColor=#000000;fillColor=#FFFFFF;strokeColor=#0077B6;" vertex="1" parent="1">
+          <mxGeometry x="340" y="190" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="9HZ5iPtXXh4kKHVZzlKG-8" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;verticalAlign=bottom;endArrow=open;endSize=8;strokeColor=#0077B6;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="9HZ5iPtXXh4kKHVZzlKG-7" parent="1" target="9HZ5iPtXXh4kKHVZzlKG-9">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="360" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9HZ5iPtXXh4kKHVZzlKG-9" value="Etapa 4: Avaliação das Diretrizes" style="rounded=1;whiteSpace=wrap;html=1;arcSize=40;fontColor=#000000;fillColor=#FFFFFF;strokeColor=#0077B6;" vertex="1" parent="1">
+          <mxGeometry x="500" y="192.5" width="120" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="9HZ5iPtXXh4kKHVZzlKG-10" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;verticalAlign=bottom;endArrow=open;endSize=8;strokeColor=#0077B6;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="9HZ5iPtXXh4kKHVZzlKG-9" parent="1" target="9HZ5iPtXXh4kKHVZzlKG-11">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="520" y="480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9HZ5iPtXXh4kKHVZzlKG-11" value="Há novas diretrizes?" style="rhombus;whiteSpace=wrap;html=1;fontColor=#000000;fillColor=#FFFFFF;strokeColor=#0077B6;" vertex="1" parent="1">
+          <mxGeometry x="520" y="265" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="9HZ5iPtXXh4kKHVZzlKG-12" value="Não" style="edgeStyle=orthogonalEdgeStyle;html=1;align=left;verticalAlign=bottom;endArrow=open;endSize=8;strokeColor=#0077B6;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="9HZ5iPtXXh4kKHVZzlKG-11" parent="1" target="9HZ5iPtXXh4kKHVZzlKG-15">
+          <mxGeometry x="-1" relative="1" as="geometry">
+            <mxPoint x="700" y="520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9HZ5iPtXXh4kKHVZzlKG-13" value="Sim" style="edgeStyle=orthogonalEdgeStyle;html=1;align=left;verticalAlign=top;endArrow=open;endSize=8;strokeColor=#0077B6;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" source="9HZ5iPtXXh4kKHVZzlKG-11" parent="1" target="9HZ5iPtXXh4kKHVZzlKG-7">
+          <mxGeometry x="0.3514" relative="1" as="geometry">
+            <mxPoint x="560" y="600" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9HZ5iPtXXh4kKHVZzlKG-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#0077B6;" edge="1" parent="1" source="9HZ5iPtXXh4kKHVZzlKG-15" target="9HZ5iPtXXh4kKHVZzlKG-18">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9HZ5iPtXXh4kKHVZzlKG-15" value="Etapa 5: Avaliação de Diagramas" style="rounded=1;whiteSpace=wrap;html=1;arcSize=40;fontColor=#000000;fillColor=#FFFFFF;strokeColor=#0077B6;" vertex="1" parent="1">
+          <mxGeometry x="640" y="280" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="9HZ5iPtXXh4kKHVZzlKG-17" value="" style="ellipse;html=1;shape=endState;fillColor=#90E0EF;strokeColor=#0077B6;" vertex="1" parent="1">
+          <mxGeometry x="705" y="450" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="9HZ5iPtXXh4kKHVZzlKG-18" value="Há novos refinamentos?" style="rhombus;whiteSpace=wrap;html=1;fontColor=#000000;fillColor=#FFFFFF;strokeColor=#0077B6;" vertex="1" parent="1">
+          <mxGeometry x="660" y="350" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="9HZ5iPtXXh4kKHVZzlKG-19" value="Não" style="edgeStyle=orthogonalEdgeStyle;html=1;align=left;verticalAlign=bottom;endArrow=open;endSize=8;strokeColor=#0077B6;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="9HZ5iPtXXh4kKHVZzlKG-18" parent="1" target="9HZ5iPtXXh4kKHVZzlKG-17">
+          <mxGeometry y="-30" relative="1" as="geometry">
+            <mxPoint x="750" y="440" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9HZ5iPtXXh4kKHVZzlKG-20" value="Sim" style="edgeStyle=orthogonalEdgeStyle;html=1;align=left;verticalAlign=top;endArrow=open;endSize=8;strokeColor=#0077B6;rounded=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" edge="1" source="9HZ5iPtXXh4kKHVZzlKG-18" parent="1" target="9HZ5iPtXXh4kKHVZzlKG-7">
+          <mxGeometry x="0.3182" relative="1" as="geometry">
+            <mxPoint x="610" y="520" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
