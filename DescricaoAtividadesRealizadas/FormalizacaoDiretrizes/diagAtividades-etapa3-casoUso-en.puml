@@ -1,0 +1,48 @@
+@startuml diagAtividades-etapa3-casoUso-en
+
+skinparam linetype ortho
+skinparam shadowing false
+'skinparam monochrome true
+
+skinparam activity {
+  BackgroundColor #FFFFFF                      
+  BorderColor      #000000                     
+  FontColor        #000000                     
+}
+
+skinparam ActivityStartColor #000000
+skinparam ActivityEndColor   #000000           
+skinparam ArrowColor         #000000  
+
+skinparam activityDiamondBackgroundColor #FFFFFF    
+skinparam activityDiamondBorderColor     #000000
+
+start
+
+:Collection of all the system’s user stories;
+:Prompt to implement the actors and their inheritance relationships in the system, based on all user stories:\n"Generate PUML use case code implementing only the actors, including inheritance relationships if any,\nconsidering the following user stories: <list of user stories>";
+
+while (Are all actors implemented?) is (No)
+  :Single corrective prompt for actor:\n"Implement actor W";
+endwhile (Yes)
+
+' Loop: coerência das heranças
+while (Are the inheritance relationships between actors consistent with the real system?) is (No)
+  :Single corrective prompt for inheritance:\n"Actor X inherits from Actor Y; Actor Z inherits from ...";
+endwhile (Yes)
+
+' Implementação dos casos de uso por ator
+while (Are there any actors without implemented use cases?) is (Yes)
+  :Prompt to implement the use cases of only one actor, based on their user stories:\n"In the previous PUML code, implement only Actor X’s use cases, based strictly\non the following user stories: <list of Actor X’s user stories>";
+endwhile (No)
+
+if (Does the system have dependency relationships?) then (Yes)
+  
+  while(Are the dependency relationships consistent?) is (No)
+    :Prompt for dependency relationships («include»/«extend»):\n "Use case A occurs only if B occurs; Use case C may occur if ...";
+  endwhile (Yes)
+  stop
+else (No)
+  stop
+
+@enduml
