@@ -1,0 +1,46 @@
+@startuml diagAtividades-etapa3-diagramaClasses-en
+skinparam linetype ortho
+skinparam shadowing false
+'skinparam monochrome true
+
+skinparam activity {
+  BackgroundColor #FFFFFF                      
+  BorderColor      #000000                     
+  FontColor        #000000                     
+}
+
+skinparam ActivityStartColor #000000
+skinparam ActivityEndColor   #000000           
+skinparam ArrowColor         #000000  
+
+skinparam activityDiamondBackgroundColor #FFFFFF    
+skinparam activityDiamondBorderColor     #000000
+
+start
+
+:Prompt to implement only the classes in PUML code:\n"Implement only classes in the PUML class diagram code,\nwithout multiplicities, relationships, attributes, or methods.\nBase the implementation on the use case code. Code: <use case code>";
+
+while (Were all classes generated?) is (No)
+    :Single corrective prompt to generate a class:\n"Generate class X, preserving the semantics\nof the component code: <component code>";
+endwhile (Yes)
+
+:Prompt to implement only the inheritance relationships between classes:\n"In the previous code, implement only the inheritance relationships that\noccur between the classes, considering the semantics of the use cases\nand components";
+
+while (Are the inheritance relationships consistent?) is (No)
+    :Single corrective prompt to generate an inheritance relationship:\n"Class Y inherits characteristics from Class Z";
+endwhile (Yes)
+
+:Prompt to implement only the relationships and multiplicities:\n"In the previous code, a club representative works at a sports club.\nA sponsor views zero or multiple posts from an athlete. Multiple athletes...";
+
+while (Are the relationships and multiplicities consistent?) is (No)
+    :Single corrective prompt to implement a relationship and multiplicity:\n"<quantity of Class A> Class A is related to <quantity of Class B> Class B";
+endwhile (Yes)
+
+:Prompt to implement only the attributes of each class, considering real characteristics:\n"In the previous code, implement only the attributes of each class, considering the real\ncharacteristics of the class";
+
+while (Are the attributes of all classes consistent?) is (No)
+    :Single corrective prompt:\n"Implement attributes P, Q, and R in class C";
+endwhile (Yes)
+
+stop
+@enduml
