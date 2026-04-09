@@ -1,0 +1,39 @@
+@startuml diagAtividades-etapa3-componentes-en
+
+skinparam linetype ortho
+skinparam shadowing false
+'skinparam monochrome true
+
+skinparam activity {
+  BackgroundColor #FFFFFF                      
+  BorderColor      #000000                     
+  FontColor        #000000                     
+}
+
+skinparam ActivityStartColor #000000
+skinparam ActivityEndColor   #000000           
+skinparam ArrowColor         #000000  
+
+skinparam activityDiamondBackgroundColor #FFFFFF    
+skinparam activityDiamondBorderColor     #000000
+
+start
+
+:Prompt to list possible components (based on the PUML use case code):\n"Based on the PlantUML use case code, list the possible\ncomponents (names only, no code): <final use case code>";
+
+while(Are the listed components cohesive?) is (No)
+  :Prompt para agrupar componentes semelhantes da lista anterior:\n"Agrupe componentes semelhantes e retorne uma nova lista";
+endwhile (Yes)
+
+:Prompt to generate PUML component code (based on the previous list):\n"Based on the previous list of components and the use case code,\ngenerate a PUML component diagram containing only components (no relationships)";
+
+while (Is the semantics of the components preserved based on the use cases?) is (No)
+  :Single corrective prompt for inheritance relationships:\n"Implement component X, preserving the semantics of the use cases";
+endwhile (Yes)
+
+while (Is the semantics of the relationships preserved based on the use cases?) is (No)
+  :Prompt to implement component relationships:\n"Implement the relationships between components\nin the PUML component code. The relationships must follow\nexactly the same semantics as the use cases";
+endwhile (Yes)
+
+stop
+@enduml
