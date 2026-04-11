@@ -1,0 +1,233 @@
+@startuml diagramaClasses - rpg - en
+' Forçar layout vertical
+top to bottom direction
+'skinparam linetype ortho
+
+' --- Classes (atores e funcionalidades) ---
+class Player {
+  id: String
+  nickname: String
+  creationDate: DateTime
+  accountLevel: Int
+  totalXp: Int
+  goldCurrency: Int
+  accountStatus: String
+}
+
+class BeginnerPlayer {
+  id: String
+  characterCreationDate: DateTime
+  tutorialCompleted: Bool
+}
+
+class ExperiencedPlayer {
+  id: String
+  characterLevel: Int
+  mmrRank: Int
+  difficultyPreference: String
+  totalCompletedHardMissions: Int
+}
+
+class Developer {
+  id: String
+  name: String
+  email: String
+  role: String
+  cheatsPermission: Bool
+}
+
+class Moderator {
+  id: String
+  name: String
+  email: String
+  shift: String
+  permissionLevel: Int
+}
+
+class Tutorial {
+  id: String
+  title: String
+  version: String
+  durationMin: Int
+  mandatory: Bool
+}
+
+class QuickGuidePopups {
+  id: String
+  title: String
+  language: String
+  version: String
+  contextualDisplay: Bool
+}
+
+class LoadingTips {
+  id: String
+  text: String
+  language: String
+  priority: Int
+  active: Bool
+}
+
+class ItemCollection {
+  id: String
+  dateTime: DateTime
+  map: String
+  region: String
+  quantity: Int
+  source: String
+}
+
+class ChallengingMissions {
+  id: String
+  name: String
+  recommendedLevel: Int
+  status: String
+  xpReward: Int
+  currencyReward: Int
+}
+
+class DifficultyAdjustment {
+  id: String
+  dateTime: DateTime
+  previousMode: String
+  newMode: String
+  scope: String
+  reason: String
+}
+
+class RankingsStatistics {
+  id: String
+  globalPosition: Int
+  kda: Float
+  wins: Int
+  losses: Int
+  winRate: Float
+  lastUpdated: DateTime
+}
+
+class RankedEventsCompetitions {
+  id: String
+  eventName: String
+  type: String
+  startDate: DateTime
+  endDate: DateTime
+  finalPlacement: Int
+  rankingPoints: Int
+}
+
+class PreviousLoads {
+  id: String
+  saveName: String
+  dateTime: DateTime
+  progressPct: Float
+  slot: Int
+  integrityHash: String
+}
+
+class NewSkillUnlock {
+  id: String
+  dateTime: DateTime
+  skillName: String
+  unlockedLevel: Int
+  source: String
+}
+
+class LogReview {
+  id: String
+  dateTime: DateTime
+  startPeriod: DateTime
+  endPeriod: DateTime
+  maximumSeverity: String
+  summary: String
+}
+
+class RealTimeBugFeedback {
+  id: String
+  title: String
+  severity: String
+  dateTime: DateTime
+  status: String
+  description: String
+}
+
+class AutomaticUpdates {
+  id: String
+  version: String
+  distributionDate: DateTime
+  sizeMb: Float
+  status: String
+  releaseNotes: String
+}
+
+class CheatAccess {
+  id: String
+  cheatName: String
+  dateTime: DateTime
+  scope: String
+  reason: String
+}
+
+class SystemUsageData {
+  id: String
+  metric: String
+  window: String
+  source: String
+  collectedAt: DateTime
+}
+
+class Item {
+  id: String
+  name: String
+  rarity: String
+  type: String
+  requiredLevel: Int
+  stackable: Bool
+  currentDurability: Int
+}
+
+class Skill {
+  id: String
+  name: String
+  type: String
+  manaCost: Int
+  cooldownS: Float
+  requiredLevel: Int
+}
+
+' --- Inheritance (according to use cases) ---
+BeginnerPlayer --|> Player
+ExperiencedPlayer --|> Player
+
+' --- Relationships — Beginner Player ---
+BeginnerPlayer "1" -- "0..*" Tutorial          : attends >
+BeginnerPlayer "1" -- "0..*" LoadingTips       : receives >
+BeginnerPlayer "1" -- "0..*" QuickGuidePopups  : accesses >
+BeginnerPlayer "1" -- "0..*" ItemCollection    : performs >
+ItemCollection "1" -- "1" Item                 : collects >
+BeginnerPlayer "1" -- "0..*" Item              : owns >
+
+' --- Relationships — Experienced Player ---
+ExperiencedPlayer "1" -- "0..*" ChallengingMissions        : performs >
+ExperiencedPlayer "1" -- "0..*" DifficultyAdjustment       : configures >
+ExperiencedPlayer "1" -- "0..*" RankingsStatistics         : consults >
+ExperiencedPlayer "1" -- "0..*" RankedEventsCompetitions   : participates in >
+ExperiencedPlayer "1" -- "0..*" PreviousLoads              : accesses >
+ExperiencedPlayer "1" -- "0..*" ItemCollection             : performs >
+ExperiencedPlayer "1" -- "0..*" Item                       : owns >
+ExperiencedPlayer "0..*" -- "0..*" Skill                   : chooses >
+
+' Unlocks resulting from missions
+ChallengingMissions "1" -- "0..*" NewSkillUnlock : triggers >
+
+' --- Relationships — Moderator ---
+Moderator "0..*" -- "0..*" Player       : monitors >
+Moderator "1" -- "0..*" LogReview       : reviews >
+LogReview "0..*" -- "0..*" SystemUsageData : consults >
+
+' --- Relationships — Developer ---
+Developer "1" -- "0..*" RealTimeBugFeedback : receives >
+Developer "1" -- "0..*" AutomaticUpdates    : implements >
+Developer "1" -- "0..*" CheatAccess         : uses >
+Developer "1" -- "0..*" SystemUsageData     : consults >
+
+@enduml

@@ -1,0 +1,47 @@
+@startuml componentes-rpg-en
+
+left to right direction
+'skinparam componentStyle rectangle
+'skinparam linetype ortho
+
+' --- Componentes ---
+component "Onboarding &\nIn-Game Help" as OnboardingHelp
+component "Progression" as Progression
+component "Difficulty\nAdjustment" as DifficultyAdjustment
+component "Competition &\nRankings" as CompetitionRankings
+component "Game Persistence\n(Saves/Loads)" as Persistence
+component "Inventory\n& Item Collection" as InventoryCollection
+component "Observability\n(Telemetry, Logs, Audit)" as Observability
+component "Moderation" as Moderation
+component "Real-Time\nBug Feedback" as FeedbackBugs
+component "Updates &\nDeployment" as Updates
+component "Internal Tools\n(QA/Cheats)" as InternalTools
+
+' --- Relationships (with dashed arrows when there is dependency) ---
+Progression ..> DifficultyAdjustment : uses\nlevels/curves
+CompetitionRankings ..> DifficultyAdjustment : uses\nlevels/curves
+Progression ..> Persistence : saves/restores\nprogress
+InventoryCollection ..> Persistence : saves/restores\nitems
+CompetitionRankings ..> Persistence : saves/queries\nrankings
+Progression ..> Observability : emits\nmetrics/events
+InventoryCollection ..> Observability : emits\nmetrics/events
+CompetitionRankings ..> Observability : emits\nmetrics/events
+Persistence ..> Observability : emits\nlogs/errors
+Moderation ..> Observability : queries\nlogs/usage data
+FeedbackBugs ..> Updates : reports bugs
+
+Updates --> OnboardingHelp : delivers\ncontent/patches
+Updates --> Progression : deploys\nrules/challenges
+Updates --> DifficultyAdjustment : deploys\ncurves/parameters
+Updates --> CompetitionRankings : deploys\nevents/rules
+Updates --> InventoryCollection : deploys\nitems/balancing
+Updates --> Observability : deploys\nagents/collection
+Updates --> Persistence : migrations/scripts
+
+InternalTools ..> Progression : warp/unlocks
+InternalTools ..> Persistence : forces\nstates/snapshots
+' --- Requested corrections ---
+OnboardingHelp ..> Persistence : saves\nprogress/tutorial
+Observability --> FeedbackBugs : feeds\nalerts
+
+@enduml

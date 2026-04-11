@@ -1,0 +1,81 @@
+@startuml casoUso-rpg-en
+
+' Forçar layout horizontal (achatar)
+left to right direction
+skinparam linetype ortho
+
+
+' Atores
+actor Player
+actor "Beginner Player" as BeginnerPlayer
+actor "Experienced Player" as ExperiencedPlayer
+actor Developer
+actor Moderator
+
+' Herança
+BeginnerPlayer --|> Player
+ExperiencedPlayer --|> Player
+
+' Casos de uso (apenas do Jogador Iniciante)
+usecase "Complete Tutorial" as UC_Tutorial
+usecase "Receive Narrative Introduction" as UC_Narrative
+usecase "Access Quick Guide/\nInterface Pop-ups" as UC_Guide
+usecase "Repeat Tutorial" as UC_RepeatTutorial
+usecase "Receive Tips on Loading Screens" as UC_Tips
+
+' Associações — Jogador Iniciante
+BeginnerPlayer --> UC_Tutorial
+BeginnerPlayer --> UC_Narrative
+BeginnerPlayer --> UC_Guide
+BeginnerPlayer --> UC_RepeatTutorial
+BeginnerPlayer --> UC_Tips
+
+' Casos de uso (apenas do Moderador) — atualizado
+usecase "Monitor Players" as UC_Mod_Monitor
+usecase "Review Conversation\nand Activity Logs" as UC_Mod_ReviewLogs
+
+' Associações — Moderador
+Moderator --> UC_Mod_Monitor
+Moderator --> UC_Mod_ReviewLogs
+
+' Casos de uso (apenas do Desenvolvedor)
+usecase "Receive Real-Time\nFeedback on Reported Bugs" as UC_Dev_RealTimeFeedback
+usecase "Implement Automatic Updates" as UC_Dev_AutoUpdates
+usecase "Access Cheats to Explore\nLevels and Find Errors" as UC_Dev_Cheats
+usecase "Access System Usage Data" as UC_Dev_UsageData
+
+' Associações — Desenvolvedor
+Developer --> UC_Dev_RealTimeFeedback
+Developer --> UC_Dev_AutoUpdates
+Developer --> UC_Dev_Cheats
+Developer --> UC_Dev_UsageData
+
+' Inclusão obrigatória: Moderador ao revisar logs deve acessar dados de uso
+UC_Mod_ReviewLogs ..> UC_Dev_UsageData : <<include>>
+
+' Casos de uso (apenas do Jogador Experiente)
+usecase "Unlock Challenging Missions\nfrom the Start" as UC_Exp_Challenges
+usecase "Adjust Difficulty Manually" as UC_Exp_AdjustDifficulty
+usecase "Access Detailed Rankings and Statistics" as UC_Exp_Rankings
+usecase "Participate in Ranked\nEvents and Competitions" as UC_Exp_Events
+usecase "Access Previous\nGame Saved" as UC_Exp_Saves
+
+' Associações — Jogador Experiente
+ExperiencedPlayer --> UC_Exp_Challenges
+ExperiencedPlayer --> UC_Exp_AdjustDifficulty
+ExperiencedPlayer --> UC_Exp_Rankings
+ExperiencedPlayer --> UC_Exp_Events
+ExperiencedPlayer --> UC_Exp_Saves
+
+' Casos de uso comuns a Iniciante e Experiente
+usecase "Collect Items" as UC_Player_Collect
+usecase "Use Skills" as UC_Player_UseSkills
+BeginnerPlayer --> UC_Player_Collect
+BeginnerPlayer --> UC_Player_UseSkills
+ExperiencedPlayer --> UC_Player_Collect
+ExperiencedPlayer --> UC_Player_UseSkills
+
+' Correção do extend: o desbloqueio ocorre APÓS as missões desafiadoras
+usecase "Unlock New Skills" as UC_Exp_UnlockSkills
+UC_Exp_Challenges ..> UC_Exp_UnlockSkills : <<extend>>
+@enduml
