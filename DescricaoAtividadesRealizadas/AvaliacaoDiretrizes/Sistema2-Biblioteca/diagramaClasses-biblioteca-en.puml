@@ -1,0 +1,108 @@
+@startuml diagramaClasses - biblioteca - en
+ 
+' Diagrama de Classes — acrescentada a classe Notificação (envio pelo Sistema aos usuários)
+
+class "System User" as SystemUser {
+  +id: UUID
+  +name: String
+  +email: String
+  +phone: String
+  +registrationDate: DateTime
+  +active: Boolean
+}
+
+class "USP Community Member" as USPCommunityMember {
+  +uspNumber: String
+  +academicUnit: String
+  +courseOrAffiliation: String
+  +emailNotificationPreferences: Boolean
+}
+
+class "Librarian" as Librarian {
+  +employeeId: String
+  +libraryUnit: String
+  +shift: String
+}
+
+class "Administrator" as Administrator {
+  +accessLevel: String
+  +responsibleArea: String
+}
+
+class "System" as System {
+  +version: String
+  +operationalStatus: String
+  +lastBackupExecution: DateTime
+  +timeZone: String
+}
+
+class Library {
+  +id: UUID
+  +name: String
+  +campus: String
+  +address: String
+  +contactEmail: String
+  +contactPhone: String
+  +openingHours: String
+  +status: String
+}
+
+class Room {
+  +id: UUID
+  +name: String
+  +location: String
+  +capacity: Integer
+  +description: String
+  +status: String
+}
+
+class Reservation {
+  +id: UUID
+  +code: String
+  +startDateTime: DateTime
+  +endDateTime: DateTime
+  +status: String
+  +purpose: String
+  +createdAt: DateTime
+  +updatedAt: DateTime
+}
+
+class Equipment {
+  +id: UUID
+  +name: String
+  +type: String
+  +description: String
+  +status: String
+  +assetSerialNumber: String
+}
+
+class Notification {
+  +id: UUID
+  +type: String           ' e.g.: CONFIRMATION, CHANGE, CANCELLATION
+  +channel: String        ' e.g.: EMAIL
+  +subject: String
+  +message: String
+  +deliveryStatus: String ' e.g.: PENDING, SENT, FAILED, DELIVERED, READ
+  +createdAt: DateTime
+  +sentAt: DateTime
+  +readAt: DateTime
+}
+
+' Inheritance (actors)
+USPCommunityMember --|> SystemUser
+Librarian --|> SystemUser
+Administrator --|> SystemUser
+
+' Domain relationships with multiplicities (existing)
+Library "1" *-- "1..*" Room : contains
+Library "1" -- "0..*" Librarian : assigns
+USPCommunityMember "1" -- "0..*" Reservation : creates/manages
+Room "1" -- "0..*" Reservation : is reserved in
+Room "1" *-- "0..*" Equipment : contains
+Librarian "0..*" -- "0..*" Room : manages
+Librarian "0..*" -- "0..*" Equipment : manages
+
+' New Notification relationships (System sends to users)
+System "1" -- "0..*" Notification : sends
+SystemUser "1" -- "0..*" Notification : receives
+@enduml
