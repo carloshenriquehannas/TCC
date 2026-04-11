@@ -1,0 +1,50 @@
+@startuml componentes-smartmed-en
+
+left to right direction
+'skinparam linetype ortho
+
+' =========================
+' Componentes
+' =========================
+component "Notification"                                   as C_Notification
+component "Adherence &\nMonitoring"                       as C_AdherenceMonitoring
+component "Medication &\nPrescription"                    as C_MedicationPrescription
+component "Inventory &\n Storage"                          as C_InventoryStorage
+component "Administration &\nConfiguration"               as C_AdminConfiguration
+component "Sensors &\nCalibration"                        as C_SensorsCalibration
+component "Security,\nIdentity &\nCompliance"            as C_SecurityIdentityCompliance
+component "Integration &\nInteroperability"               as C_IntegrationInteroperability
+component "Reliability &\n Observability"                  as C_ReliabilityObservability
+
+' =========================
+' Relationships (preserving semantics; condensed)
+' =========================
+
+' 1) Main functional flows (collaboration → solid line)
+C_SensorsCalibration        --> C_AdherenceMonitoring           : raw\ntelemetry
+C_AdherenceMonitoring       --> C_MedicationPrescription        : rules/dosage
+C_Notification              --> C_AdherenceMonitoring           : irregularities
+C_Notification              --> C_InventoryStorage              : low\nstock
+
+' 2) Administration/Configuration (business → solid line)
+C_AdminConfiguration        --> C_AdherenceMonitoring           : thresholds
+C_AdminConfiguration        --> C_InventoryStorage              : minimum\nlevels
+C_AdminConfiguration        --> C_SensorsCalibration            : calibration
+
+' 3) External integrations (dependency → dashed arrow)
+C_MedicationPrescription    ..> C_IntegrationInteroperability   : Electronic Medical Record /\nElectronic Health Record
+C_InventoryStorage          ..> C_IntegrationInteroperability   : Enterprise Resource\nPlanning
+C_AdminConfiguration        ..> C_IntegrationInteroperability   : endpoints/keys
+
+' 4) Cross-cutting: Security/Identity/LGPD (dependency → dashed arrow)
+C_MedicationPrescription    ..> C_SecurityIdentityCompliance    : General Data\nProtection Law
+C_SensorsCalibration        ..> C_SecurityIdentityCompliance    : device\nidentity
+C_IntegrationInteroperability ..> C_SecurityIdentityCompliance  : contracts/Data\nProcessing Agreements
+C_AdminConfiguration        ..> C_SecurityIdentityCompliance    : audit
+
+' 5) Operations/Observability (dependency → dashed arrow)
+C_AdherenceMonitoring       ..> C_ReliabilityObservability      : metrics/logs
+C_Notification              ..> C_ReliabilityObservability      : delivery/latency
+C_IntegrationInteroperability ..> C_ReliabilityObservability    : integrations
+
+@enduml

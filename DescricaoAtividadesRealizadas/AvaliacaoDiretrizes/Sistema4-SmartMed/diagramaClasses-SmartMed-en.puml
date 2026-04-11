@@ -1,0 +1,162 @@
+@startuml diagramaClasses-smartmed-en
+'left to right direction
+'skinparam linetype ortho
+
+' =========================
+' Atores (como classes)
+' =========================
+class "System User" as SystemUser {
+  userId: String
+  name: String
+  email: String
+}
+class "Employee" as Employee {
+  employeeId: String
+  department: String
+  role: String
+}
+class "Patient" as Patient {
+  medicalRecordId: String
+  birthDate: Date
+  biologicalSex: String
+}
+class "Operator" as Operator {
+  shift: String
+  active: Boolean
+  certifications: String
+}
+class "Doctor" as Doctor {
+  medicalLicense: String
+  specialty: String
+  shift: String
+}
+class "Technician" as Technician {
+  professionalRegistration: String
+  technicalSpecialty: String
+  shift: String
+}
+class "Companion" as Companion {
+  name: String
+  relationship: String
+  contact: String
+}
+class "Administrator" as Administrator {
+  accessLevel: String
+  responsibleArea: String
+  active: Boolean
+}
+class "System" as System {
+  systemId: String
+  version: String
+  environment: String
+}
+
+' =========================
+' Services / Domain (from the components)
+' =========================
+class "Integration & Interoperability" as IntegrationInteroperability {
+  supportedStandards: String
+  activeEndpoints: Int
+  eventBroker: String
+}
+class "Identity & Access (IAM)" as IdentityAccessIAM {
+  provider: String
+  mfaEnabled: Boolean
+  passwordPolicyLevel: String
+}
+class "Notification" as Notification {
+  supportedChannels: String
+  quietHours: String
+  maxRatePerHour: Int
+}
+class "Telemetry & Adherence Analytics" as TelemetryAdherenceAnalytics {
+  samplingWindowMin: Int
+  retentionDays: Int
+  detectionModel: String
+}
+class "Dispensing & Inventory" as DispensingInventory {
+  doseCapacity: Int
+  minimumAlertLevel: Int
+  deviceStatus: String
+}
+class "Medical Record & Prescription" as MedicalRecordPrescription {
+  medicalRecordNumber: String
+  lastUpdated: DateTime
+  prescriptionSource: String
+}
+class "Security, Privacy & Compliance" as SecurityPrivacyCompliance {
+  encryptionAtRest: Boolean
+  complianceLevel: String
+  activeAudit: Boolean
+}
+class "Administration, Operations & Observability" as AdministrationOperationsObservability {
+  targetSlaPct: Float
+  weeklyMaintenanceWindow: String
+  operationalStatus: String
+}
+
+' =========================
+' Newly requested class
+' =========================
+class "Medication" as Medication {
+  anvisaCode: String
+  name: String
+  pharmaceuticalForm: String
+}
+
+' =========================
+' Inheritance (kept)
+' =========================
+Employee --|> SystemUser
+Patient --|> SystemUser
+Companion --|> SystemUser
+Operator --|> Employee
+Doctor --|> Employee
+Technician --|> Employee
+Administrator --|> Employee
+
+' =========================
+' Main compositions / aggregations
+' =========================
+Patient "1" *-- "1" MedicalRecordPrescription : has
+MedicalRecordPrescription "1" o-- "0..*" Medication : includes
+IdentityAccessIAM "1" o-- "0..*" SystemUser : manages\nidentities
+DispensingInventory "1" o-- "0..*" Medication : maintains\ninventory
+
+' =========================
+' Domain associations (with multiplicities)
+' =========================
+Patient "0..*" -- "0..*" Medication : takes/is\nprescribed
+Technician "0..*" -- "0..*" DispensingInventory : maintains/\ninstalls
+Operator "0..*" -- "0..*" DispensingInventory : operates
+Patient "0..*" -- "0..*" DispensingInventory : receives\ndispensing
+Doctor "0..*" -- "0..*" MedicalRecordPrescription : prescribes/\nconsults
+Companion "0..*" -- "0..*" Patient : accompanies
+
+' Notifications to users
+Notification "1" -- "0..*" SystemUser : sends/\ndelivers
+
+' Telemetry and observability
+TelemetryAdherenceAnalytics "1" -- "0..*" Patient : monitors\nadherence
+AdministrationOperationsObservability "1" -- "0..*" DispensingInventory : observes/\ngenerates metrics
+
+' Integration among services (associations/dependencies)
+IntegrationInteroperability "1" -- "0..*" MedicalRecordPrescription
+IntegrationInteroperability "1" -- "0..*" DispensingInventory
+IntegrationInteroperability "1" -- "0..*" TelemetryAdherenceAnalytics
+
+' =========================
+' Dependencies among services (flows/usage)
+' =========================
+TelemetryAdherenceAnalytics ..> Notification : generates\nalerts
+DispensingInventory ..> TelemetryAdherenceAnalytics : sends\nevents
+MedicalRecordPrescription ..> Notification : schedules\nreminders
+SecurityPrivacyCompliance ..> IdentityAccessIAM : policies/\nauthorizations
+
+' =========================
+' "System" constraints (only with integration, security, and notification)
+' =========================
+System "1" -- "1" IntegrationInteroperability
+System "1" -- "1" SecurityPrivacyCompliance
+System "1" -- "1" Notification
+@enduml
