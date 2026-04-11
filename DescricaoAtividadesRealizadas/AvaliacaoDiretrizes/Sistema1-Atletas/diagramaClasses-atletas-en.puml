@@ -1,0 +1,168 @@
+@startuml diagramaClasses - Athletes - en
+skinparam classAttributeIconSize 0
+
+' ======== Papéis e atores como classes de domínio ========
+abstract class User {
+  +id: UUID
+  +fullName: String
+  +email: String
+  +phone: String
+  +personType: PersonType
+  +document: String
+  +address: String
+  +createdAt: DateTime
+  +updatedAt: DateTime
+  +active: Boolean
+}
+
+class Athlete {
+  +sport: String
+  +category: String
+  +nationality: String
+  +birthDate: Date
+  +ranking: Integer
+  +publicProfile: Boolean
+  +bio: String
+}
+
+class Sponsor {
+  +brand: String
+  +industry: String
+  +website: String
+}
+
+class AgencyRep {
+  +agencyName: String
+  +fieldOfActivity: String
+  +professionalRegistration: String
+}
+
+class ClubRep {
+  +position: String
+  +employeeId: String
+  +hireDate: Date
+}
+
+' Herança já definida
+User <|-- Athlete
+User <|-- Sponsor
+User <|-- AgencyRep
+User <|-- ClubRep
+
+' ======== Conteúdo & Publicações ========
+class Post {
+  +id: UUID
+  +type: PostType
+  +mediaUrl: String
+  +caption: String
+  +publicationDate: DateTime
+  +visibility: Visibility
+  +likes: Integer
+  +engagement: Float
+  +status: PostStatus
+}
+
+' ======== Interações & Relatórios ========
+class PerformanceReport {
+  +id: UUID
+  +startPeriod: Date
+  +endPeriod: Date
+  +totalPosts: Integer
+  +impressions: Integer
+  +reach: Integer
+  +engagements: Integer
+  +clicks: Integer
+  +conversions: Integer
+  +roi: Decimal
+  +generatedAt: DateTime
+}
+
+' ======== Calendário & Eventos ========
+
+class Calendar {
+  +id: UUID
+  +name: String
+  +description: String
+  +timezone: String
+  +lastSyncedAt: DateTime
+}
+
+class SportsEvent {
+  +id: UUID
+  +title: String
+  +category: String
+  +location: String
+  +start: DateTime
+  +end: DateTime
+  +organizer: String
+  +status: EventStatus
+}
+
+' ======== Patrocínios & Contratos ========
+class Sponsorship {
+  +id: UUID
+  +startDate: Date
+  +endDate: Date
+  +totalValue: Decimal
+  +currency: String
+  +status: SponsorshipStatus
+  +type: String
+  +kpis: String
+  +objectives: String
+}
+
+class SponsorshipContract {
+  +id: UUID
+  +number: String
+  +signatureDate: Date
+  +effectiveStartDate: Date
+  +effectiveEndDate: Date
+  +terminationPenalty: Decimal
+  +fileURL: String
+  +status: ContractStatus
+}
+
+' ======== Monitoramento ========
+class ProgressMonitoring {
+  +id: UUID
+  +startPeriod: Date
+  +endPeriod: Date
+  +metrics: String
+  +conditionScore: Float
+  +notes: String
+  +createdAt: DateTime
+}
+
+' ======== Clube ========
+class SportsClub {
+  +id: UUID
+  +name: String
+  +taxId: String
+  +headquarters: String
+  +website: String
+  +contactEmail: String
+  +contactPhone: String
+  +foundationDate: Date
+}
+
+' ======== Relações previamente definidas (mantidas) ========
+SportsClub "1" <-- "1..*" ClubRep : Works at
+Sponsor "1" -- "0..*" Sponsorship
+Athlete       "1" -- "0..*" Sponsorship
+Sponsor "0..*" -- "0..*" Post : Views
+SportsClub "1" -- "0..*" Athlete : Is part of the roster
+Athlete "0..*" -- "0..*" SportsEvent : Participates in
+Calendar "1" -- "0..*" SportsEvent : Organizes/schedules
+
+' ======== Complementações anteriores (mantidas) ========
+Athlete "1" -- "0..*" Post : Performs
+Sponsorship "1" -- "1" SponsorshipContract : Is governed by
+ClubRep "0..*" -- "0..*" Athlete : Manages participation
+ClubRep "0..*" -- "0..*" SportsEvent : Manages participation
+Athlete "0..*" -- "1" Calendar :Views
+AgencyRep "0..*" -- "0..*" SponsorshipContract : Intermediates
+ClubRep   "0..*" -- "0..*" ProgressMonitoring : Monitors
+AgencyRep "0..*" -- "0..*" ProgressMonitoring : Monitors
+Sponsor "0..*" -- "0..*" PerformanceReport : Accesses
+
+@enduml
