@@ -78,11 +78,11 @@ class Equipment {
 
 class Notification {
   +id: UUID
-  +type: String           ' e.g.: CONFIRMATION, CHANGE, CANCELLATION
-  +channel: String        ' e.g.: EMAIL
+  +type: String           
+  +channel: String        
   +subject: String
   +message: String
-  +deliveryStatus: String ' e.g.: PENDING, SENT, FAILED, DELIVERED, READ
+  +deliveryStatus: String 
   +createdAt: DateTime
   +sentAt: DateTime
   +readAt: DateTime
