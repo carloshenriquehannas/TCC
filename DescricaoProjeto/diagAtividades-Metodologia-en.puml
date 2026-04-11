@@ -1,0 +1,37 @@
+@startuml diagAtividades-Metodologia-en
+
+skinparam linetype ortho
+skinparam shadowing false
+skinparam monochrome true
+top to bottom direction
+
+skinparam activity {
+  BackgroundColor #FFFFFF                      
+  BorderColor      #000000                     
+  FontColor        #000000                     
+}
+
+skinparam ActivityStartColor #000000
+skinparam ActivityEndColor   #000000           
+skinparam ArrowColor         #000000  
+
+skinparam activityDiamondBackgroundColor #FFFFFF    
+skinparam activityDiamondBorderColor     #000000
+
+(*) --> "Step 1: Study of the analysis and design subprocess" as e1
+e1  --> "Step 2: Exploration of the LLM guidelines"           as e2
+e2  --> "Step 3: Formalization of the guidelines"             as e3
+e3  --> "Step 4: Evaluation of the guidelines"
+
+if "Are there new guidelines in Step 4?" then
+  --> [Yes]  e3
+else
+  -->[No] "Step 5: Diagram evaluation"                        as e5                        
+endif
+
+if "Are there refinements in Step 5?" then
+  -->[Yes]  e3
+else
+  -->[No] (*)                        
+endif
+@enduml
