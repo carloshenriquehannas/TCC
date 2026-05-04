@@ -22,7 +22,7 @@ start
 :Prompt to list possible components (based on the PUML use case code):\n"Based on the PlantUML use case code, list the possible\ncomponents (names only, no code): <final use case code>";
 
 while(Are the listed components cohesive?) is (No)
-  :Prompt para agrupar componentes semelhantes da lista anterior:\n"Agrupe componentes semelhantes e retorne uma nova lista";
+  :Prompt for grouping similar components from the previous list:\n"Group similar components and return a new list";
 endwhile (Yes)
 
 :Prompt to generate PUML component code (based on the previous list):\n"Based on the previous list of components and the use case code,\ngenerate a PUML component diagram containing only components (no relationships)";

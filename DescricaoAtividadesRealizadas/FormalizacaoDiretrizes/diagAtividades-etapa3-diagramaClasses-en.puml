@@ -30,7 +30,7 @@ while (Are the inheritance relationships consistent?) is (No)
     :Single corrective prompt to generate an inheritance relationship:\n"Class Y inherits characteristics from Class Z";
 endwhile (Yes)
 
-:Prompt to implement only the relationships and multiplicities:\n"In the previous code, a club representative works at a sports club.\nA sponsor views zero or multiple posts from an athlete. Multiple athletes...";
+:Prompt to implement only the relationships and multiplicities:\n"In the previous code, <Class G> <relationship between Class G and Class H> <Class H>. \n<Class I> views zero or multiple instances from <Class J>.\nMultiple <Class K> instances may be associated...";
 
 while (Are the relationships and multiplicities consistent?) is (No)
     :Single corrective prompt to implement a relationship and multiplicity:\n"<quantity of Class A> Class A is related to <quantity of Class B> Class B";
