@@ -130,6 +130,7 @@ This repository uses the following formats:
 
 | Format    | Purpose                                   |
 | --------- | ----------------------------------------- |
+| `*-en.*`  | English version                           |
 | `.puml`   | PlantUML source files                     |
 | `.drawio` | diagrams.net/draw.io editable diagrams    |
 | `.png`    | Rendered diagram images                   |
