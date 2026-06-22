@@ -130,11 +130,12 @@ This repository uses the following formats:
 
 | Format    | Purpose                                   |
 | --------- | ----------------------------------------- |
-| `*-en.*`  | English version                           |
 | `.puml`   | PlantUML source files                     |
 | `.drawio` | diagrams.net/draw.io editable diagrams    |
 | `.png`    | Rendered diagram images                   |
 | `.pdf`    | Rendered presentation or diagram document |
+
+All files with `*-en.*`  represent english version.                         
 
 ## Suggested Usage
 
